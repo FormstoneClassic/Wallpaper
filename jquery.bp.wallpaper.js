@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling, page-filling background
  * @author Ben Plum
- * @version 1.0.1
+ * @version 1.0.2
  *
  * Copyright © 2012 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -18,6 +18,7 @@
 		onReady: function() {},
 		onLoad: function() {}
 	};
+	var isAnimating = false;
 	
 	// Methods
 	var methods = {
@@ -60,18 +61,21 @@
 		
 		// Load image
 		_loadImage: function(src) {
-			// Make sure it's a new image
-			if (options.$wallpaper.find("img").attr("src") != src) {
+			// Make sure it's a new image and that we're not currently animating another image
+			if (options.$wallpaper.find("img").attr("src") != src && isAnimating === false) {
+				isAnimating = true;
 				var $img = $("<img />");
 				$img.load(function(){
 					if (options.$wallpaper.find("img").length < 1) {
 						// If it's the first image just append it
 						$img.appendTo(options.$wallpaper);
+						isAnimating = false;
 					} else {
 						// Otherwise we need to animate it in
 						$img.css({ opacity: 0, "-webkit-transition": "none", "-moz-transition": "none", "-o-transition": "none", "-ms-transition": "none", transition: "none" }).appendTo(options.$wallpaper).animate({ opacity: 1 }, options.speed, function() {
 							// Remove the old image
 							options.$wallpaper.find("img").not(":last").remove();
+							isAnimating = false;
 						});
 					}
 					$img.css({left: "0", position: "absolute", top: "0"});
