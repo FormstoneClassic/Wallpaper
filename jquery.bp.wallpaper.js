@@ -3,7 +3,7 @@
  * @author Ben Plum
  * @version 1.0.2
  *
- * Copyright © 2012 Ben Plum <mr@benplum.com>
+ * Copyright Â© 2012 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
  */
 
