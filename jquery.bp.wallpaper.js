@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling, page-filling background
  * @author Ben Plum
- * @version 1.1
+ * @version 1.3
  *
  * Copyright © 2012 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -26,6 +26,23 @@ if (jQuery) (function($) {
 		// Update the wallpaper image
 		update: function(src) {
 			_loadImage(src);
+		},
+		
+		// Destroy Wallpaper
+		destroy: function() {
+			var $body = $("body");
+			$body.trigger("wallpaper.beforeDestroy");
+			// Modify DOM - Only if fitting = "document" (need a way to calculate the actual content height)
+			if (options.fitting == "document") {
+				$body.append(options.$content.html());
+				options.$content.remove();
+				options.$content = null;
+			}
+			options.$wallpaper.remove();
+			options.$wallpaper = null;
+			
+			$(window).off(".wallpaper");
+			$body.trigger("wallpaper.afterDestroy");
 		}
 	};
 	
