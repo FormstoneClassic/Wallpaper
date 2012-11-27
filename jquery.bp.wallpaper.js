@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling, page-filling background
  * @author Ben Plum
- * @version 1.3.1
+ * @version 1.3.3
  *
  * Copyright © 2012 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -55,7 +55,7 @@ if (jQuery) (function($) {
 			// Modify DOM - Only if fitting = "document" (need a way to calculate the actual content height)
 			if (options.fitting == "document") {
 				$body.wrapInner('<div id="wallpaper_content" style="overflow: hidden; position: relative;"></div>');
-				options.$content = $("wallpaper_content");
+				options.$content = $("#wallpaper_content");
 			}
 			$body.append('<div id="wallpaper"></div>');
 			options.$wallpaper = $("#wallpaper");
@@ -69,7 +69,10 @@ if (jQuery) (function($) {
 			}
 			
 			// Bind events
-			$(window).on("resize.wallpaper", _resize);
+			$(window).on("resize.wallpaper", _resize)
+					 .one("load", function() {
+						 $(window).trigger("resize.wallpaper");
+					 });
 			
 			// Load first image
 			_loadImage(options.file);
@@ -128,14 +131,13 @@ if (jQuery) (function($) {
 			if (options.fitting == "window") {
 				var height = $(window).height();
 				
-				//options.$content.css({ height: height });
 				$img.css({ top: -size.top });
 			} else {
 				var docHeight = $(document).height();
 				var windowHeight = $(window).height();
 				var height = options.$content.outerHeight(true);
 				
-				if (height < docHeight) height = docHeight;
+				if (height < docHeight) docHeight = height;
 				if (windowHeight > height) height = windowHeight;
 			}
 			
