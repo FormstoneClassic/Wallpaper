@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling, page-filling background
  * @author Ben Plum
- * @version 1.3.3
+ * @version 1.3.4
  *
  * Copyright © 2012 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -61,7 +61,7 @@ if (jQuery) (function($) {
 			options.$wallpaper = $("#wallpaper");
 			
 			// Set up wallpaper
-			options.$wallpaper.css({ overflow: "hidden", minWidth: options.minWidth, top: 0, width: "100%", zIndex: -1 });
+			options.$wallpaper.css({ overflow: "hidden", minWidth: options.minWidth, top: 0, width: "100%", zIndex: -1, "-webkit-transition": "none", "-moz-transition": "none", "-o-transition": "none", "-ms-transition": "none", transition: "none" });
 			if (options.fitting == "document") {
 				options.$wallpaper.css({ position: "absolute" });
 			} else {
@@ -85,7 +85,7 @@ if (jQuery) (function($) {
 		// Make sure it's a new image and that we're not currently animating another image
 		if (options.$wallpaper.find("img").attr("src") != src && isAnimating === false) {
 			isAnimating = true;
-			var $img = $("<img />");
+			var $img = $('<img />');
 			$img.one("load", function(){
 				if (options.$wallpaper.find("img").length < 1) {
 					// If it's the first image just append it
