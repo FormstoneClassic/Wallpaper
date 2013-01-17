@@ -1,0 +1,26 @@
+{
+	"name": "wallpaper",
+	"title": "Wallpaper",
+	"description": "A jQuery plugin for smooth-scaling, page-filling backgrounds. ",
+	"keywords": [
+		"images",
+		"background"
+	],
+	"version": "1.3.4",
+	"author": {
+		"name": "Ben Plum",
+		"url": "http://www.benplum.com"
+	},
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://www.opensource.org/licenses/mit-license.php"
+		}
+	],
+	"docs": "http://www.benplum.com/projects/wallpaper/",
+	"download": "https://github.com/benplum/Wallpaper",
+	"bugs": "https://github.com/benplum/Wallpaper/issues",
+	"dependencies": {
+		"jquery": ">=1.7"
+	}
+}
