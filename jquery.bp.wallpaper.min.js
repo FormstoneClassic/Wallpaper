@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling, page-filling background
  * @author Ben Plum
- * @version 1.3.4
+ * @version 1.3.5
  *
  * Copyright © 2012 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
