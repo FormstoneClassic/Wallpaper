@@ -20,6 +20,7 @@
 		}
 	],
 	"docs": "http://www.benplum.com/projects/wallpaper/",
+	"demo": "http://www.benplum.com/projects/wallpaper/",
 	"download": "https://github.com/benplum/Wallpaper",
 	"bugs": "https://github.com/benplum/Wallpaper/issues",
 	"dependencies": {
