@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling background to any element
  * @author Ben Plum
- * @version 2.0.1
+ * @version 2.0.2
  *
  * Copyright © 2013 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -107,10 +107,10 @@ if (jQuery) (function($) {
 		if (data.currentSource != source && data.isAnimating === false) {
 			data.currentSource = source;
 			data.isAnimating = true;
-			var $imgContainer = $('<div class="wallpaper-image"><img class="" /></div>');
+			var $imgContainer = $('<div class="wallpaper-image"><img /></div>');
 				$img = $imgContainer.find("img");
 			
-			$img.one("load", function() {
+			$img.one("load.wallpaper", function() {
 				if (data.fixed) {
 					$imgContainer.addClass("fixed")
 								 .css({ backgroundImage: "url(" + data.source + ")" });
@@ -118,8 +118,8 @@ if (jQuery) (function($) {
 				
 				if (data.$container.find(".wallpaper-image").length < 1) {
 					// If it's the first image just append it
-					$imgContainer.css({ opacity: 1 })
-								 .appendTo(data.$container);
+					$imgContainer.appendTo(data.$container)
+								 .animate({ opacity: 1 }, data.speed);
 					data.isAnimating = false;
 				} else {
 					// Otherwise we need to animate it in
@@ -136,7 +136,7 @@ if (jQuery) (function($) {
 			}).attr("src", data.currentSource);
 			
 			// Check if image is cached
-			if ($img[0].complete) {
+			if ($img[0].complete || $img[0].readyState === 4) {
 				$img.trigger("load");
 			}
 		}
@@ -161,10 +161,11 @@ if (jQuery) (function($) {
 			if ($img.length > 0) {
 				var frameWidth = data.$target.outerWidth(),
 					frameHeight = data.$target.outerHeight(),
-					frameRatio = frameWidth / frameHeight;
+					frameRatio = frameWidth / frameHeight,
+					naturalSize = _naturalSize($img);
 				
-				data.width = $img[0].naturalWidth;
-				data.height = $img[0].naturalHeight;
+				data.width = naturalSize.naturalWidth;
+				data.height = naturalSize.naturalHeight;
 				data.left = 0;
 				data.top = 0;
 				
@@ -208,6 +209,27 @@ if (jQuery) (function($) {
 			var data = $(this).data("wallpaper");
 			_resize({ data: data });
 		});
+	}
+	
+	function _naturalSize($img) {
+		var node = $img[0],
+			img = new Image();
+		
+		if (typeof node.naturalHeight != "undefined") {
+			return {
+				naturalHeight: node.naturalHeight,
+				naturalWidth:  node.naturalWidth
+			};
+		} else {
+			if (node.tagName.toLowerCase() === 'img') {
+				img.src = node.src;
+				return {
+					naturalHeight: img.height,
+					naturalWidth:  img.width
+				};
+			}
+		}
+		return false;
 	}
 	
 	// Define plugin
