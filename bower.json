@@ -2,12 +2,12 @@
 	"name": "Wallpaper",
 	"version": "2.0.2",
 	"main": [
-		"jquery.bp.wallpaper.css",
-		"jquery.bp.wallpaper.min.js"
+		"./jquery.bp.wallpaper.css",
+		"./jquery.bp.wallpaper.min.js"
 	],
 	"ignore": [
-		"*.md",
-		"*.json"
+		"./*.md",
+		"./*.json"
 	],
 	"dependencies": {
 		"jquery": ">= 1.7.0"
