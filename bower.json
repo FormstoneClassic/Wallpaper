@@ -1,13 +1,26 @@
 {
 	"name": "Wallpaper",
-	"version": "2.0.2",
+	"version": "2.0.3",
+	"description": "A jQuery plugin for smooth-scaling, page-filling backgrounds. ",
+	"keywords": [
+		"javascript",
+		"jquery",
+		"images",
+		"background",
+		"ui",
+		"benplum"
+	],
+	"authors": [
+		"Ben Plum"
+	],
+	"license": "MIT",
+	"homepage": "http://www.benplum.com/projects/wallpaper/",
 	"main": [
-		"./jquery.bp.wallpaper.css",
-		"./jquery.bp.wallpaper.min.js"
+		"jquery.bp.wallpaper.css",
+		"jquery.bp.wallpaper.min.js"
 	],
 	"ignore": [
-		"./*.md",
-		"./*.json"
+		"*.json"
 	],
 	"dependencies": {
 		"jquery": ">= 1.7.0"
