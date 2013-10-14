@@ -6,11 +6,10 @@
 		"jquery.bp.wallpaper.min.js"
 	}
 	"ignore": [
-		"*.md",
-		"*.jquery.json"
+		"wallpaper.jquery.json"
 	],
 	"dependencies": {
-		"jquery": ">=1.7"
+		"jquery": ">= 1.7.0"
 	}
 	"devDependencies": {}
 }
