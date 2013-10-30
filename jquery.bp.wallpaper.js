@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling background to any element
  * @author Ben Plum
- * @version 2.0.3
+ * @version 2.1.0
  *
  * Copyright © 2013 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -17,6 +17,8 @@ if (jQuery) (function($) {
 		source: "",
 		speed: "500"
 	};
+	
+	var nativeSupport = ("backgroundSize" in document.documentElement.style);
 	
 	// Public Methods
 	var pub = {
@@ -116,6 +118,11 @@ if (jQuery) (function($) {
 								 .css({ backgroundImage: "url(" + data.source + ")" });
 				}
 				
+				if (nativeSupport) {
+					$imgContainer.addClass("native")
+								 .css({ backgroundImage: "url(" + data.source + ")" });
+				}
+				
 				if (data.$container.find(".wallpaper-image").length < 1) {
 					// If it's the first image just append it
 					$imgContainer.appendTo(data.$container)
@@ -143,6 +150,10 @@ if (jQuery) (function($) {
 	}
 	
 	function _resize(e) {
+		if (nativeSupport) {
+			return;
+		}
+		
 		var data = e.data;
 		
 		if (e.preventDefault) {
@@ -205,6 +216,10 @@ if (jQuery) (function($) {
 	}
 	
 	function _resizeAll() {
+		if (nativeSupport) {
+			return;
+		}
+		
 		$(".wallpaper").each(function() {
 			var data = $(this).data("wallpaper");
 			_resize({ data: data });
