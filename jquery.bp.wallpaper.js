@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling background to any element
  * @author Ben Plum
- * @version 2.1.0
+ * @version 2.1.1
  *
  * Copyright © 2013 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -15,7 +15,7 @@ if (jQuery) (function($) {
 		onReady: function() {},
 		onLoad: function() {},
 		source: "",
-		speed: "500"
+		speed: 500
 	};
 	
 	var nativeSupport = ("backgroundSize" in document.documentElement.style);
@@ -98,53 +98,63 @@ if (jQuery) (function($) {
 						.on("resize.wallpaper", data, _resize);
 			
 			// Load first image
-			_loadImage(data.source, data);
+			var source = data.source;
+			data.source = "";
+			_loadImage(source, data);
 			data.onReady.call();
 		}
 	}
 	
 	// Load image
 	function _loadImage(source, data) {
-		// Make sure it's a new image and that we're not currently animating another image
-		if (data.currentSource != source && data.isAnimating === false) {
-			data.currentSource = source;
-			data.isAnimating = true;
-			var $imgContainer = $('<div class="wallpaper-image"><img /></div>');
-				$img = $imgContainer.find("img");
-			
-			$img.one("load.wallpaper", function() {
-				if (data.fixed) {
-					$imgContainer.addClass("fixed")
-								 .css({ backgroundImage: "url(" + data.source + ")" });
-				}
+		// Check that we're not currently animating another image
+		if (!data.isAnimating) {
+			// Make sure it's a new image
+			if (data.source !== source) {
+				data.source = source;
+				data.isAnimating = true;
 				
-				if (nativeSupport) {
-					$imgContainer.addClass("native")
-								 .css({ backgroundImage: "url(" + data.source + ")" });
-				}
+				var $imgContainer = $('<div class="wallpaper-image"><img /></div>');
+					$img = $imgContainer.find("img");
 				
-				if (data.$container.find(".wallpaper-image").length < 1) {
-					// If it's the first image just append it
-					$imgContainer.appendTo(data.$container)
-								 .animate({ opacity: 1 }, data.speed);
-					data.isAnimating = false;
-				} else {
-					// Otherwise we need to animate it in
-					$imgContainer.appendTo(data.$container)
-							     .animate({ opacity: 1 }, data.speed, function() {
-									// Remove the old image
-									data.$container.find(".wallpaper-image").not(":last").remove();
-									data.isAnimating = false;
-								 });
-				}
+				$img.one("load.wallpaper", function() {
+					if (data.fixed) {
+						$imgContainer.addClass("fixed")
+									 .css({ backgroundImage: "url(" + data.source + ")" });
+					}
+					
+					if (nativeSupport) {
+						$imgContainer.addClass("native")
+									 .css({ backgroundImage: "url(" + data.source + ")" });
+					}
+					
+					if (data.$container.find(".wallpaper-image").length < 1) {
+						// If it's the first image just append it
+						$imgContainer.appendTo(data.$container)
+									 .animate({ opacity: 1 }, data.speed);
+						data.isAnimating = false;
+						data.$target.trigger("wallpaper.loaded");
+					} else {
+						// Otherwise we need to animate it in
+						$imgContainer.appendTo(data.$container)
+								     .animate({ opacity: 1 }, data.speed, function() {
+										 // Remove the old image
+										 data.$container.find(".wallpaper-image").not(":last").remove();
+										 data.isAnimating = false;
+										 data.$target.trigger("wallpaper.loaded");
+									 });
+					}
+					
+					_resize({ data: data });
+					data.onLoad.call();
+				}).attr("src", data.source);
 				
-				_resize({ data: data });
-				data.onLoad.call();
-			}).attr("src", data.currentSource);
-			
-			// Check if image is cached
-			if ($img[0].complete || $img[0].readyState === 4) {
-				$img.trigger("load");
+				// Check if image is cached
+				if ($img[0].complete || $img[0].readyState === 4) {
+					$img.trigger("load");
+				}
+			} else {
+				data.$target.trigger("wallpaper.loaded");
 			}
 		}
 	}
@@ -196,7 +206,6 @@ if (jQuery) (function($) {
 				data.left = -(data.width - frameWidth) / 2;
 				data.top = -(data.height - frameHeight) / 2;
 				
-				
 				if (data.fixed) {
 					$imgContainer.css({
 						backgroundPosition: data.left+"px "+data.top+"px",
@@ -211,7 +220,6 @@ if (jQuery) (function($) {
 					});
 				}
 			}
-			
 		}
 	}
 	
