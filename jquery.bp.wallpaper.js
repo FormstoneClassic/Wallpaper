@@ -1,7 +1,7 @@
  /* 
  * Wallpaper - Adds a smooth-scaling background to any element
  * @author Ben Plum
- * @version 2.1.1
+ * @version 2.1.2
  *
  * Copyright © 2013 Ben Plum <mr@benplum.com>
  * Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
@@ -82,7 +82,7 @@ if (jQuery) (function($) {
 			// EXTEND OPTIONS
 			$.extend(data, $target.data("wallpaper-options"));
 			
-			$target.addClass("wallpaper")
+			$target.addClass("wallpaper loading")
 				   .append('<div class="wallpaper-container"></div>');
 			
 			data.isAnimating = false;
@@ -109,6 +109,8 @@ if (jQuery) (function($) {
 	function _loadImage(source, data) {
 		// Check that we're not currently animating another image
 		if (!data.isAnimating) {
+			data.$target.addClass("loading");
+			
 			// Make sure it's a new image
 			if (data.source !== source) {
 				data.source = source;
@@ -144,6 +146,8 @@ if (jQuery) (function($) {
 										 data.$target.trigger("wallpaper.loaded");
 									 });
 					}
+					
+					data.$target.removeClass("loading");
 					
 					_resize({ data: data });
 					data.onLoad.call();
