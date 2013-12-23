@@ -1,29 +1,12 @@
 {
-	"name": "Wallpaper",
-	"version": "2.1.2",
-	"description": "A jQuery plugin for smooth-scaling, page-filling backgrounds. ",
-	"keywords": [
-		"javascript",
-		"jquery",
-		"images",
-		"background",
-		"ui",
-		"benplum"
-	],
-	"authors": [
-		"Ben Plum"
-	],
-	"license": "MIT",
-	"homepage": "http://www.benplum.com/projects/wallpaper/",
-	"main": [
-		"jquery.bp.wallpaper.css",
-		"jquery.bp.wallpaper.min.js"
-	],
-	"ignore": [
-		"*.json"
-	],
-	"dependencies": {
-		"jquery": ">= 1.7.0"
-	},
-	"devDependencies": {}
+  "name": "Wallpaper",
+  "version": "2.2.0",
+  "description": "A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library.",
+  "author": {
+    "name": "Ben Plum",
+    "email": "mr@benplum.com",
+    "url": "http://www.benplum.com"
+  },
+  "license": "MIT",
+  "homepage": "http://www.benplum.com/formstone/wallpaper/"
 }

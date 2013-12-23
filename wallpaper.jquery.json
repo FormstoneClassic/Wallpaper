@@ -1,29 +1,32 @@
 {
-	"name": "wallpaper",
-	"title": "Wallpaper",
-	"description": "A jQuery plugin for smooth-scaling, page-filling backgrounds. ",
-	"keywords": [
-		"images",
-		"background",
-		"ui",
-		"benplum"
-	],
-	"version": "2.1.2",
-	"author": {
-		"name": "Ben Plum",
-		"url": "http://www.benplum.com"
-	},
-	"licenses": [
-		{
-			"type": "MIT",
-			"url": "http://www.opensource.org/licenses/mit-license.php"
-		}
-	],
-	"docs": "http://www.benplum.com/projects/wallpaper/",
-	"demo": "http://www.benplum.com/projects/wallpaper/",
-	"download": "https://github.com/benplum/Wallpaper",
-	"bugs": "https://github.com/benplum/Wallpaper/issues",
-	"dependencies": {
-		"jquery": ">=1.7"
-	}
+  "name": "wallpaper",
+  "version": "2.2.0",
+  "title": "Wallpaper",
+  "author": {
+    "name": "Ben Plum",
+    "email": "mr@benplum.com",
+    "url": "http://www.benplum.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.7"
+  },
+  "homepage": "http://www.benplum.com/formstone/wallpaper/",
+  "description": "A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library.",
+  "keywords": [
+    "images",
+    "background",
+    "responsive",
+    "ui",
+    "benplum"
+  ],
+  "docs": "http://www.benplum.com/formstone/wallpaper/",
+  "demo": "http://www.benplum.com/formstone/wallpaper/",
+  "download": "https://github.com/benplum/Wallpaper",
+  "bugs": "https://github.com/benplum/Wallpaper/issues"
 }
