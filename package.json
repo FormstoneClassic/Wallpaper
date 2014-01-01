@@ -1,8 +1,8 @@
 {
   "name": "Wallpaper",
   "id": "wallpaper",
-  "codename": "jquery.bp.wallpaper",
-  "version": "2.2.1",
+  "codename": "jquery.fs.wallpaper",
+  "version": "2.2.2",
   "description": "A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library.",
   "keywords": [
 	"images",
