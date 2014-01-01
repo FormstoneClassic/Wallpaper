@@ -2,9 +2,18 @@
 	"use strict";
 	
 	var $window = $(window),
-		$body = $("body");
+		$body = $("body"),
+		nativeSupport = ("backgroundSize" in document.documentElement.style);
 	
-	// Default options
+	/**
+	 * @options
+	 * @param autoPlay [boolean] <true> "Autoplay video"
+	 * @param hoverPlay [boolean] <false> "Play video on hover"
+	 * @param loop [boolean] <true> "Loop video"
+	 * @param onLoad [function] <$.noop> "On load callback"
+	 * @param onReady [function] <$.noop> "On ready callback"
+	 * @param source [string | object] <null> "Source image (string) or video (object)"
+	 */ 
 	var options = {
 		/* fixed: false, */
 		autoPlay: true,
@@ -16,18 +25,31 @@
 		speed: 500
 	};
 	
-	var nativeSupport = ("backgroundSize" in document.documentElement.style);
+	/**
+	 * @events
+	 * @event wallpaper.loaded "Source media loaded"
+	 */
 	
-	// Public Methods
 	var pub = {
 		
-		// Set Defaults
+		/**
+		 * @method 
+		 * @name defaults
+		 * @description "Set default options"
+		 * @param opts [object] "Options object"
+		 * @return [jQuery object] "Maintains chainability"
+		 */ 
 		defaults: function(opts) {
 			options = $.extend(options, opts || {});
 			return $(this);
 		},
 		
-		// Destroy Wallpaper
+		/**
+		 * @method 
+		 * @name destroy
+		 * @description "Removes instance"
+		 * @return [jQuery object] "Maintains chainability"
+		 */ 
 		destroy: function() {
 			var $targets = $(this).each(function() {
 				var data = $(this).data("wallpaper");
@@ -45,7 +67,13 @@
 			return $targets;
 		},
 		
-		// Load new image
+		/**
+		 * @method 
+		 * @name load
+		 * @description "Load new media"
+		 * @param source [string | object] "Source image (string) or video (object)"
+		 * @return [jQuery object] "Maintains chainability"
+		 */ 
 		load: function(source) {
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper");
@@ -54,7 +82,12 @@
 			});
 		},
 		
-		// Play video
+		/**
+		 * @method 
+		 * @name play
+		 * @description "Play video"
+		 * @return [jQuery object] "Maintains chainability"
+		 */ 
 		play: function() {
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper"),
@@ -66,7 +99,12 @@
 			});
 		},
 		
-		// Stop video
+		/**
+		 * @method 
+		 * @name stop
+		 * @description "Stop video"
+		 * @return [jQuery object] "Maintains chainability"
+		 */ 
 		stop: function() {
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper"),
@@ -79,7 +117,12 @@
 		}
 	};
 	
-	// Initialize
+	/**
+	 * @method private
+	 * @name _init
+	 * @description Initialize plugin
+	 * @param opts [object] "Initialization options"
+	 */
 	function _init(opts) {
 		var data = $.extend({}, options, opts);
 		
@@ -99,7 +142,12 @@
 		return $targets;
 	}
 	
-	// Build each instance
+	/**
+	 * @method private
+	 * @name _build
+	 * @description Build each instance
+	 * @param data [object] "Instance data"
+	 */
 	function _build(data) {
 		var $target = $(this);
 		if (!$target.hasClass("wallpaper")) {
@@ -132,7 +180,13 @@
 		}
 	}
 	
-	// Load Media
+	/**
+	 * @method private
+	 * @name _loadMedia
+	 * @description Determine how to handle source media
+	 * @param source [string | object] "Source image (string) or video (object)"
+	 * @param data [object] "Instance data"
+	 */
 	function _loadMedia(source, data) {
 		// Check if we're animating
 		if (!data.isAnimating) {
@@ -154,18 +208,22 @@
 		}
 	}
 	
-	// Load image
+	/**
+	 * @method private
+	 * @name _loadImage
+	 * @description Load source image
+	 * @param source [string] "Source image"
+	 * @param data [object] "Instance data"
+	 */
 	function _loadImage(source, data) {
 		var $imgContainer = $('<div class="wallpaper-media wallpaper-image"><img /></div>'),
 			$img = $imgContainer.find("img");
 		
 		$img.one("load.wallpaper", function() {
-			/*
-			if (data.fixed) {
-				$imgContainer.addClass("fixed")
-							 .css({ backgroundImage: "url(" + data.source + ")" });
-			}
-			*/
+			//if (data.fixed) {
+			//	$imgContainer.addClass("fixed")
+			//				 .css({ backgroundImage: "url(" + data.source + ")" });
+			//}
 			
 			if (nativeSupport) {
 				$imgContainer.addClass("native")
@@ -201,7 +259,13 @@
 		}
 	}
 	
-	// Load video
+	/**
+	 * @method private
+	 * @name _loadVideo
+	 * @description Load source video
+	 * @param source [object] "Source video"
+	 * @param data [object] "Instance data"
+	 */
 	function _loadVideo(source, data) {
 		var $videoContainer = $('<div class="wallpaper-media wallpaper-video"></div>'),
 			html = '<video';
@@ -254,6 +318,12 @@
 		});
 	}
 	
+	/**
+	 * @method private
+	 * @name _resize
+	 * @description Resize instance
+	 * @param e [object] "Event data"
+	 */
 	function _resize(e) {
 		if (e.preventDefault) {
 			e.preventDefault();
@@ -298,14 +368,13 @@
 				data.left = -(data.width - frameWidth) / 2;
 				data.top = -(data.height - frameHeight) / 2;
 				
-				/*
-				if (data.fixed) {
-					$mediaContainer.css({
-						backgroundPosition: data.left+"px "+data.top+"px",
-						backgroundSize: data.width+"px "+data.height+"px"
-					});
-				} else {
-				*/
+				//if (data.fixed) {
+				//	$mediaContainer.css({
+				//		backgroundPosition: data.left+"px "+data.top+"px",
+				//		backgroundSize: data.width+"px "+data.height+"px"
+				//	});
+				//} else {
+				
 					$mediaContainer.css({ 
 						height: data.height, 
 						width: data.width, 
@@ -317,6 +386,11 @@
 		}
 	}
 	
+	/**
+	 * @method private
+	 * @name _resizeAll
+	 * @description Resize all instances
+	 */
 	function _resizeAll() {
 		$(".wallpaper").each(function() {
 			var data = $(this).data("wallpaper");
@@ -324,6 +398,13 @@
 		});
 	}
 	
+	/**
+	 * @method private
+	 * @name _naturalSize
+	 * @description Determine natural size of source media
+	 * @param $media [jQuery object] "Source media object"
+	 * @return [object | boolean] "Object containing natural height and width values or false"
+	 */
 	function _naturalSize($media) {
 		if ($media.is("img")) {
 			var node = $media[0];
@@ -350,7 +431,6 @@
 		return false;
 	}
 	
-	// Define plugin
 	$.fn.wallpaper = function(method) {
 		if (pub[method]) {
 			return pub[method].apply(this, Array.prototype.slice.call(arguments, 1));
