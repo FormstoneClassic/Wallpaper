@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v2.2.2 - 2014-01-01 
+ * Wallpaper v2.2.3 - 2014-01-01 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://www.benplum.com/formstone/wallpaper/ 
  * 
@@ -10,7 +10,7 @@
  * @plugin 
  * @name Wallpaper 
  * @description A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
- * @version 2.2.2 
+ * @version 2.2.3 
  */ 
 
 ;(function ($, window) {
@@ -50,9 +50,8 @@
 		/**
 		 * @method 
 		 * @name defaults
-		 * @description "Set default options"
+		 * @description Sets default plugin options
 		 * @param opts [object] "Options object"
-		 * @return [jQuery object] "Maintains chainability"
 		 */ 
 		defaults: function(opts) {
 			options = $.extend(options, opts || {});
@@ -62,8 +61,7 @@
 		/**
 		 * @method 
 		 * @name destroy
-		 * @description "Removes instance"
-		 * @return [jQuery object] "Maintains chainability"
+		 * @description Removes instance of plugin
 		 */ 
 		destroy: function() {
 			var $targets = $(this).each(function() {
@@ -85,9 +83,8 @@
 		/**
 		 * @method 
 		 * @name load
-		 * @description "Load new media"
+		 * @description Loads new source media
 		 * @param source [string | object] "Source image (string) or video (object)"
-		 * @return [jQuery object] "Maintains chainability"
 		 */ 
 		load: function(source) {
 			return $(this).each(function() {
@@ -100,8 +97,7 @@
 		/**
 		 * @method 
 		 * @name play
-		 * @description "Play video"
-		 * @return [jQuery object] "Maintains chainability"
+		 * @description Plays video
 		 */ 
 		play: function() {
 			return $(this).each(function() {
@@ -117,8 +113,7 @@
 		/**
 		 * @method 
 		 * @name stop
-		 * @description "Stop video"
-		 * @return [jQuery object] "Maintains chainability"
+		 * @description Stops video
 		 */ 
 		stop: function() {
 			return $(this).each(function() {
