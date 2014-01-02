@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v2.2.3 - 2014-01-01 
+ * Wallpaper v2.2.4 - 2014-01-01 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://www.benplum.com/formstone/wallpaper/ 
  * 
@@ -10,7 +10,7 @@
  * @plugin 
  * @name Wallpaper 
  * @description A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
- * @version 2.2.3 
+ * @version 2.2.4 
  */ 
 
 ;(function ($, window) {
@@ -30,7 +30,6 @@
 	 * @param source [string | object] <null> "Source image (string) or video (object)"
 	 */ 
 	var options = {
-		/* fixed: false, */
 		autoPlay: true,
 		hoverPlay: false,
 		loop: true,
@@ -51,7 +50,7 @@
 		 * @method 
 		 * @name defaults
 		 * @description Sets default plugin options
-		 * @param opts [object] "Options object"
+		 * @param opts [object] <{}> "Options object"
 		 */ 
 		defaults: function(opts) {
 			options = $.extend(options, opts || {});
@@ -83,8 +82,8 @@
 		/**
 		 * @method 
 		 * @name load
-		 * @description Loads new source media
-		 * @param source [string | object] "Source image (string) or video (object)"
+		 * @description Loads source media 
+		 * @param source [string | object] <null> "Source image (string) or video (object)"
 		 */ 
 		load: function(source) {
 			return $(this).each(function() {
@@ -97,7 +96,7 @@
 		/**
 		 * @method 
 		 * @name play
-		 * @description Plays video
+		 * @description Plays target video
 		 */ 
 		play: function() {
 			return $(this).each(function() {
@@ -113,7 +112,7 @@
 		/**
 		 * @method 
 		 * @name stop
-		 * @description Stops video
+		 * @description Stops target video
 		 */ 
 		stop: function() {
 			return $(this).each(function() {
@@ -130,7 +129,7 @@
 	/**
 	 * @method private
 	 * @name _init
-	 * @description Initialize plugin
+	 * @description Initializes plugin instances
 	 * @param opts [object] "Initialization options"
 	 */
 	function _init(opts) {
@@ -155,13 +154,12 @@
 	/**
 	 * @method private
 	 * @name _build
-	 * @description Build each instance
+	 * @description Builds each instance
 	 * @param data [object] "Instance data"
 	 */
 	function _build(data) {
 		var $target = $(this);
 		if (!$target.hasClass("wallpaper")) {
-			// EXTEND OPTIONS
 			$.extend(data, $target.data("wallpaper-options"));
 			
 			$target.addClass("wallpaper loading")
@@ -170,12 +168,6 @@
 			data.isAnimating = false;
 			data.$target = $target;
 			data.$container = data.$target.find(".wallpaper-container");
-			
-			/*
-			if (data.fixed) {
-				data.$container.addClass("wallpaper-fixed");
-			}
-			*/
 			
 			// Bind data & events
 			data.$target.data("wallpaper", data)
@@ -193,7 +185,7 @@
 	/**
 	 * @method private
 	 * @name _loadMedia
-	 * @description Determine how to handle source media
+	 * @description Determines how to handle source media
 	 * @param source [string | object] "Source image (string) or video (object)"
 	 * @param data [object] "Instance data"
 	 */
@@ -221,7 +213,7 @@
 	/**
 	 * @method private
 	 * @name _loadImage
-	 * @description Load source image
+	 * @description Loads source image
 	 * @param source [string] "Source image"
 	 * @param data [object] "Instance data"
 	 */
@@ -230,10 +222,6 @@
 			$img = $imgContainer.find("img");
 		
 		$img.one("load.wallpaper", function() {
-			//if (data.fixed) {
-			//	$imgContainer.addClass("fixed")
-			//				 .css({ backgroundImage: "url(" + data.source + ")" });
-			//}
 			
 			if (nativeSupport) {
 				$imgContainer.addClass("native")
@@ -272,7 +260,7 @@
 	/**
 	 * @method private
 	 * @name _loadVideo
-	 * @description Load source video
+	 * @description Loads source video
 	 * @param source [object] "Source video"
 	 * @param data [object] "Instance data"
 	 */
@@ -317,7 +305,7 @@
 								   data.$container.find(".wallpaper-image").not(":last").remove();
 								   data.isAnimating = false;
 								   data.$target.trigger("wallpaper.loaded");
-							    });
+							   });
 			}
 			
 			data.$target.removeClass("loading")
@@ -331,7 +319,7 @@
 	/**
 	 * @method private
 	 * @name _resize
-	 * @description Resize instance
+	 * @description Resize target instance
 	 * @param e [object] "Event data"
 	 */
 	function _resize(e) {
@@ -378,20 +366,12 @@
 				data.left = -(data.width - frameWidth) / 2;
 				data.top = -(data.height - frameHeight) / 2;
 				
-				//if (data.fixed) {
-				//	$mediaContainer.css({
-				//		backgroundPosition: data.left+"px "+data.top+"px",
-				//		backgroundSize: data.width+"px "+data.height+"px"
-				//	});
-				//} else {
-				
-					$mediaContainer.css({ 
-						height: data.height, 
-						width: data.width, 
-						left: data.left, 
-						top: data.top 
-					});
-				//}
+				$mediaContainer.css({ 
+					height: data.height, 
+					width: data.width, 
+					left: data.left, 
+					top: data.top 
+				});
 			}
 		}
 	}
@@ -399,7 +379,7 @@
 	/**
 	 * @method private
 	 * @name _resizeAll
-	 * @description Resize all instances
+	 * @description Resizes all target instances
 	 */
 	function _resizeAll() {
 		$(".wallpaper").each(function() {
@@ -411,7 +391,7 @@
 	/**
 	 * @method private
 	 * @name _naturalSize
-	 * @description Determine natural size of source media
+	 * @description Determines natural size of target media
 	 * @param $media [jQuery object] "Source media object"
 	 * @return [object | boolean] "Object containing natural height and width values or false"
 	 */
