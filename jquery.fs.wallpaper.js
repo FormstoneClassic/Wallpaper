@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v2.2.4 - 2014-01-01 
+ * Wallpaper v2.2.4 - 2014-01-03 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://www.benplum.com/formstone/wallpaper/ 
  * 
@@ -144,7 +144,7 @@
 		// Global events
 		if (!$body.hasClass("wallpaper-inititalized")) {
 			$body.addClass("wallpaper-inititalized");
-			$window.on("resize.wallpaper", data, _resizeAll);
+			$window.on("resize.wallpaper", data, _onResizeAll);
 		}
 		
 		// Maintain chainability
@@ -171,7 +171,7 @@
 			
 			// Bind data & events
 			data.$target.data("wallpaper", data)
-						.on("resize.wallpaper", data, _resize);
+						.on("resize.wallpaper", data, _onResize);
 			
 			var source = data.source;
 			data.source = null;
@@ -247,7 +247,7 @@
 			
 			data.$target.removeClass("loading");
 			
-			_resize({ data: data });
+			_onResize({ data: data });
 			data.onLoad.call();
 		}).attr("src", data.source);
 		
@@ -311,18 +311,18 @@
 			data.$target.removeClass("loading")
 						.trigger("wallpaper.loaded");
 			
-			_resize({ data: data });
+			_onResize({ data: data });
 			data.onLoad.call();
 		});
 	}
 	
 	/**
 	 * @method private
-	 * @name _resize
+	 * @name _onResize
 	 * @description Resize target instance
 	 * @param e [object] "Event data"
 	 */
-	function _resize(e) {
+	function _onResize(e) {
 		if (e.preventDefault) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -378,13 +378,13 @@
 	
 	/**
 	 * @method private
-	 * @name _resizeAll
+	 * @name _onResizeAll
 	 * @description Resizes all target instances
 	 */
-	function _resizeAll() {
+	function _onResizeAll() {
 		$(".wallpaper").each(function() {
 			var data = $(this).data("wallpaper");
-			_resize({ data: data });
+			_onResize({ data: data });
 		});
 	}
 	
