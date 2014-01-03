@@ -51,6 +51,7 @@
 		 * @name defaults
 		 * @description Sets default plugin options
 		 * @param opts [object] <{}> "Options object"
+		 * @example $(".target").wallpaper("defaults", opts);
 		 */ 
 		defaults: function(opts) {
 			options = $.extend(options, opts || {});
@@ -61,6 +62,7 @@
 		 * @method 
 		 * @name destroy
 		 * @description Removes instance of plugin
+		 * @example $(".target").wallpaper("destroy");
 		 */ 
 		destroy: function() {
 			var $targets = $(this).each(function() {
@@ -84,6 +86,7 @@
 		 * @name load
 		 * @description Loads source media 
 		 * @param source [string | object] <null> "Source image (string) or video (object)"
+		 * @example $(".target").wallpaper("load", "path/to/image.jpg");
 		 */ 
 		load: function(source) {
 			return $(this).each(function() {
@@ -97,6 +100,7 @@
 		 * @method 
 		 * @name play
 		 * @description Plays target video
+		 * @example $(".target").wallpaper("play");
 		 */ 
 		play: function() {
 			return $(this).each(function() {
@@ -113,6 +117,7 @@
 		 * @method 
 		 * @name stop
 		 * @description Stops target video
+		 * @example $(".target").wallpaper("stop");
 		 */ 
 		stop: function() {
 			return $(this).each(function() {
