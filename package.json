@@ -16,6 +16,7 @@
     "url": "https://github.com/benplum/Wallpaper"
   },
   "homepage": "http://www.benplum.com/formstone/wallpaper/",
+  "demo": "http://www.benplum.com/components/Wallpaper/demo/index.html",
   "license": "MIT",
   "author": {
     "name": "Ben Plum",

@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v2.2.4 - 2014-01-03 
+ * Wallpaper v2.2.4 - 2014-01-04 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://www.benplum.com/formstone/wallpaper/ 
  * 
