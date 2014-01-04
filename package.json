@@ -2,7 +2,7 @@
   "name": "Wallpaper",
   "id": "wallpaper",
   "codename": "jquery.fs.wallpaper",
-  "version": "2.2.4",
+  "version": "3.0.0",
   "description": "A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library.",
   "keywords": [
 	"images",
@@ -15,8 +15,8 @@
     "type": "git",
     "url": "https://github.com/benplum/Wallpaper"
   },
-  "homepage": "http://www.benplum.com/formstone/wallpaper/",
-  "demo": "http://www.benplum.com/components/Wallpaper/demo/index.html",
+  "homepage": "http://formstone.it/wallpaper/",
+  "demo": "http://formstone.it/components/Wallpaper/demo/index.html",
   "license": "MIT",
   "author": {
     "name": "Ben Plum",

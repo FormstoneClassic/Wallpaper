@@ -3,8 +3,8 @@
 
 A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
 
-- [Demo](http://www.benplum.com/components/Wallpaper/demo/index.html) 
-- [Documentation](http://www.benplum.com/formstone/wallpaper/) 
+- [Demo](http://formstone.it/components/Wallpaper/demo/index.html) 
+- [Documentation](http://formstone.it/wallpaper/) 
 
 #### Bower Support 
 `bower install Wallpaper`

@@ -1,6 +1,6 @@
 {
   "name": "Wallpaper",
-  "version": "2.2.4",
+  "version": "3.0.0",
   "description": "A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library.",
   "author": {
     "name": "Ben Plum",
@@ -8,5 +8,5 @@
     "url": "http://www.benplum.com"
   },
   "license": "MIT",
-  "homepage": "http://www.benplum.com/formstone/wallpaper/"
+  "homepage": "http://formstone.it/wallpaper/"
 }
