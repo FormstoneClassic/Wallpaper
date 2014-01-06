@@ -70,7 +70,7 @@
 		 * @method 
 		 * @name load
 		 * @description Loads source media 
-		 * @param source [string | object] <null> "Source image (string) or video (object)"
+		 * @param source [string | object] "Source image (string) or video (object)"
 		 * @example $(".target").wallpaper("load", "path/to/image.jpg");
 		 */ 
 		load: function(source) {

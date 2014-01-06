@@ -9,6 +9,9 @@
 	"background",
 	"responsive",
 	"ui",
+	"javascript", 
+  	"jquery", 
+  	"formstone",
 	"benplum"
   ],
   "repository": {
