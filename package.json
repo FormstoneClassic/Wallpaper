@@ -2,15 +2,15 @@
   "name": "Wallpaper",
   "id": "wallpaper",
   "codename": "jquery.fs.wallpaper",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library.",
   "keywords": [
 	"images",
 	"background",
 	"responsive",
 	"ui",
-	"javascript", 
-  	"jquery", 
+	"javascript",
+  	"jquery",
   	"formstone",
 	"benplum"
   ],
