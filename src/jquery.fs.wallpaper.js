@@ -1,10 +1,10 @@
 ;(function ($, window) {
 	"use strict";
-	
+
 	var $window = $(window),
 		$body = $("body"),
 		nativeSupport = ("backgroundSize" in document.documentElement.style);
-	
+
 	/**
 	 * @options
 	 * @param autoPlay [boolean] <true> "Autoplay video"
@@ -13,7 +13,7 @@
 	 * @param onLoad [function] <$.noop> "On load callback"
 	 * @param onReady [function] <$.noop> "On ready callback"
 	 * @param source [string | object] <null> "Source image (string) or video (object)"
-	 */ 
+	 */
 	var options = {
 		autoPlay: true,
 		hoverPlay: false,
@@ -23,99 +23,99 @@
 		source: null,
 		speed: 500
 	};
-	
+
 	/**
 	 * @events
 	 * @event wallpaper.loaded "Source media loaded"
 	 */
-	
+
 	var pub = {
-		
+
 		/**
-		 * @method 
+		 * @method
 		 * @name defaults
 		 * @description Sets default plugin options
 		 * @param opts [object] <{}> "Options object"
-		 * @example $(".target").wallpaper("defaults", opts);
-		 */ 
+		 * @example $.wallpaper("defaults", opts);
+		 */
 		defaults: function(opts) {
 			options = $.extend(options, opts || {});
 			return $(this);
 		},
-		
+
 		/**
-		 * @method 
+		 * @method
 		 * @name destroy
 		 * @description Removes instance of plugin
 		 * @example $(".target").wallpaper("destroy");
-		 */ 
+		 */
 		destroy: function() {
 			var $targets = $(this).each(function() {
 				var data = $(this).data("wallpaper");
-				
+
 				data.$target.removeClass("wallpaper")
 							.off(".boxer");
 				data.$container.remove();
 			});
-			
+
 			if ($(".wallpaper").length < 1) {
 				$body.removeClass("wallpaper-inititalized");
 				$window.off(".wallpaper");
 			}
-			
+
 			return $targets;
 		},
-		
+
 		/**
-		 * @method 
+		 * @method
 		 * @name load
-		 * @description Loads source media 
+		 * @description Loads source media
 		 * @param source [string | object] "Source image (string) or video (object)"
 		 * @example $(".target").wallpaper("load", "path/to/image.jpg");
-		 */ 
+		 */
 		load: function(source) {
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper");
-				
+
 				_loadMedia(source, data);
 			});
 		},
-		
+
 		/**
-		 * @method 
+		 * @method
 		 * @name play
 		 * @description Plays target video
 		 * @example $(".target").wallpaper("play");
-		 */ 
+		 */
 		play: function() {
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper"),
 					$video = data.$container.find("video");
-				
+
 				if ($video.length) {
 					$video[0].play();
 				}
 			});
 		},
-		
+
 		/**
-		 * @method 
+		 * @method
 		 * @name stop
 		 * @description Stops target video
 		 * @example $(".target").wallpaper("stop");
-		 */ 
+		 */
 		stop: function() {
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper"),
 					$video = data.$container.find("video");
-				
+
 				if ($video.length) {
 					$video[0].pause();
 				}
 			});
 		}
 	};
-	
+
 	/**
 	 * @method private
 	 * @name _init
@@ -124,23 +124,23 @@
 	 */
 	function _init(opts) {
 		var data = $.extend({}, options, opts);
-		
+
 		// Apply to each
 		var $targets = $(this);
 		for (var i = 0, count = $targets.length; i < count; i++) {
 			_build.apply($targets.eq(i), [ $.extend({}, data) ]);
 		}
-		
+
 		// Global events
 		if (!$body.hasClass("wallpaper-inititalized")) {
 			$body.addClass("wallpaper-inititalized");
 			$window.on("resize.wallpaper", data, _onResizeAll);
 		}
-		
+
 		// Maintain chainability
 		return $targets;
 	}
-	
+
 	/**
 	 * @method private
 	 * @name _build
@@ -151,27 +151,27 @@
 		var $target = $(this);
 		if (!$target.hasClass("wallpaper")) {
 			$.extend(data, $target.data("wallpaper-options"));
-			
+
 			$target.addClass("wallpaper loading")
 				   .append('<div class="wallpaper-container"></div>');
-			
+
 			data.isAnimating = false;
 			data.$target = $target;
 			data.$container = data.$target.find(".wallpaper-container");
-			
+
 			// Bind data & events
 			data.$target.data("wallpaper", data)
 						.on("resize.wallpaper", data, _onResize);
-			
+
 			var source = data.source;
 			data.source = null;
-			
+
 			_loadMedia(source, data);
-			
+
 			data.onReady.call();
 		}
 	}
-	
+
 	/**
 	 * @method private
 	 * @name _loadMedia
@@ -185,10 +185,10 @@
 			// Check if the source is new
 			if (data.source !== source) {
 				data.$target.addClass("loading");
-				
+
 				data.source = source;
 				data.isAnimating = true;
-				
+
 				if (typeof source === "object") {
 					_loadVideo(source, data);
 				} else {
@@ -199,7 +199,7 @@
 			}
 		}
 	}
-	
+
 	/**
 	 * @method private
 	 * @name _loadImage
@@ -210,14 +210,14 @@
 	function _loadImage(source, data) {
 		var $imgContainer = $('<div class="wallpaper-media wallpaper-image"><img /></div>'),
 			$img = $imgContainer.find("img");
-		
+
 		$img.one("load.wallpaper", function() {
-			
+
 			if (nativeSupport) {
 				$imgContainer.addClass("native")
 							 .css({ backgroundImage: "url(" + data.source + ")" });
 			}
-			
+
 			if (data.$container.find(".wallpaper-media").length < 1) {
 				// If it's the first image just append it
 				$imgContainer.appendTo(data.$container)
@@ -234,19 +234,19 @@
 								 data.$target.trigger("wallpaper.loaded");
 							 });
 			}
-			
+
 			data.$target.removeClass("loading");
-			
+
 			_onResize({ data: data });
 			data.onLoad.call();
 		}).attr("src", data.source);
-		
+
 		// Check if image is cached
 		if ($img[0].complete || $img[0].readyState === 4) {
 			$img.trigger("load");
 		}
 	}
-	
+
 	/**
 	 * @method private
 	 * @name _loadVideo
@@ -257,7 +257,7 @@
 	function _loadVideo(source, data) {
 		var $videoContainer = $('<div class="wallpaper-media wallpaper-video"></div>'),
 			html = '<video';
-		
+
 		if (data.loop) {
 			html += ' loop';
 		}
@@ -272,7 +272,7 @@
 			html += '<source src="' + data.source.ogg + '" type="video/ogg" />';
 		}
 		html += '</video>';
-		
+
 		$videoContainer.append(html).find("video").one("loadedmetadata", function(e) {
 			if (data.$container.find(".wallpaper-media").length < 1) {
 				// If it's the first video just append it
@@ -280,7 +280,7 @@
 							   .animate({ opacity: 1 }, data.speed);
 				data.isAnimating = false;
 				data.$target.trigger("wallpaper.loaded");
-				
+
 				if (data.hoverPlay) {
 					data.$target.on("mouseover.boxer", pub.play)
 								.on("mouseout.boxer", pub.stop);
@@ -297,15 +297,15 @@
 								   data.$target.trigger("wallpaper.loaded");
 							   });
 			}
-			
+
 			data.$target.removeClass("loading")
 						.trigger("wallpaper.loaded");
-			
+
 			_onResize({ data: data });
 			data.onLoad.call();
 		});
 	}
-	
+
 	/**
 	 * @method private
 	 * @name _onResize
@@ -317,55 +317,55 @@
 			e.preventDefault();
 			e.stopPropagation();
 		}
-		
+
 		var data = e.data;
-		
+
 		// Target all media
 		var $mediaContainers = data.$container.find(".wallpaper-media");
-		
+
 		for (var i = 0, count = $mediaContainers.length; i < count; i++) {
 			var $mediaContainer = $mediaContainers.eq(i),
 				type = $mediaContainer.find("video").length ? "video" : "image",
 				$media = $mediaContainer.find(type);
-			
+
 			// If media found and scaling is not natively support
 			if ($media.length && !(type === "image" && data.nativeSupport)) {
 				var frameWidth = data.$target.outerWidth(),
 					frameHeight = data.$target.outerHeight(),
 					frameRatio = frameWidth / frameHeight,
 					naturalSize = _naturalSize($media);
-				
+
 				data.width = naturalSize.naturalWidth;
 				data.height = naturalSize.naturalHeight;
 				data.left = 0;
 				data.top = 0;
-				
+
 				var mediaRatio = data.width / data.height;
-				
+
 				// First check the height
 				data.height = frameHeight;
 				data.width = data.height * mediaRatio;
-				
+
 				// Next check the width
 				if (data.width < frameWidth) {
 					data.width = frameWidth;
 					data.height = data.width / mediaRatio;
 				}
-				
+
 				// Position the media
 				data.left = -(data.width - frameWidth) / 2;
 				data.top = -(data.height - frameHeight) / 2;
-				
-				$mediaContainer.css({ 
-					height: data.height, 
-					width: data.width, 
-					left: data.left, 
-					top: data.top 
+
+				$mediaContainer.css({
+					height: data.height,
+					width: data.width,
+					left: data.left,
+					top: data.top
 				});
 			}
 		}
 	}
-	
+
 	/**
 	 * @method private
 	 * @name _onResizeAll
@@ -377,7 +377,7 @@
 			_onResize({ data: data });
 		});
 	}
-	
+
 	/**
 	 * @method private
 	 * @name _naturalSize
@@ -388,7 +388,7 @@
 	function _naturalSize($media) {
 		if ($media.is("img")) {
 			var node = $media[0];
-			
+
 			if (typeof node.naturalHeight !== "undefined") {
 				return {
 					naturalHeight: node.naturalHeight,
@@ -410,13 +410,19 @@
 		}
 		return false;
 	}
-	
+
 	$.fn.wallpaper = function(method) {
 		if (pub[method]) {
 			return pub[method].apply(this, Array.prototype.slice.call(arguments, 1));
 		} else if (typeof method === 'object' || !method) {
 			return _init.apply(this, arguments);
 		}
-		return this; 
+		return this;
+	};
+
+	$.wallpaper = function(method) {
+		if (method === "defaults") {
+			pub.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
+		}
 	};
 })(jQuery, window);
