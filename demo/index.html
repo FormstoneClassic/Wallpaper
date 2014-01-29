@@ -3,26 +3,26 @@
 	<head>
 		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    	
+
 		<title>Wallpaper Demo</title>
-		
+
 		<link href="http://formstone.it/css/demo.css" rel="stylesheet" type="text/css" media="all" />
-		
+
 		<!--[if LTE IE 8]>
 			<link href="http://formstone.it/css/demo.ie.css" rel="stylesheet" type="text/css" media="all" />
 		<![endif]-->
-		
+
 		<script src="http://formstone.it/js/demo.js"></script>
-		
+
 		<link href="../jquery.fs.wallpaper.css" rel="stylesheet" type="text/css" media="all" />
 		<script src="../jquery.fs.wallpaper.js"></script>
-		
+
 		<style>
 			.wallpapered { background: #eee; margin: 0 0 20px; padding-top: 50%; width: 100%; }
 			.wallpapered.square { padding-top: 100%; }
 			.wallpapered.bar { margin: -25px 0; }
 		</style>
-		
+
 		<script>
 			$(document).ready(function() {
 				$(".wallpapered").wallpaper();
@@ -45,29 +45,29 @@
 					<br />
 					<a href="http://formstone.it/wallpaper/" class="button">View Documentation</a>
 				</header>
-				
+
 				<!-- Basic -->
 				<h2>Image</h2>
 				<p>Create a new Wallpapered element by passing the source image file in the options object:</p>
-				
+
 				<pre class="example"><code class="language-javascript">$("#element").wallpaper({
 	source: "path/to/image.jpg"
 });</code></pre>
 				<pre class="example"><code class="language-markup">&lt;div id="element"&gt;&lt;/div&gt;</code></pre>
-				
+
 				<h5>Demo</h5>
 			</div>
 		</article>
-		
+
 		<div class="wallpapered bar" data-wallpaper-options='{"source":"http://formstone.it/files/demo/space.jpg"}'></div>
-		
+
 		<article class="row page">
 			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
-				
+
 				<!-- Video -->
 				<h2>Video</h2>
 				<p>Create a video Wallpaper by simply defining proper source types:</p>
-				
+
 				<pre class="example"><code class="language-javascript">$("#element").wallpaper({
 	source: {
 		mp4:  "path/to/video.mp4",
@@ -75,20 +75,20 @@
 		webm: "path/to/video.webm"
 	}
 });</code></pre>
-				
+
 				<h5>Demo</h5>
 			</div>
 		</article>
-		
+
 		<div class="wallpapered bar" data-wallpaper-options='{"source":{"webm":"http://formstone.it/files/demo/oranges.webm","mp4":"http://formstone.it/files/demo/oranges.mp4","ogg":"http://formstone.it/files/demo/oranges.ogv"}}'></div>
-		
+
 		<article class="row page">
 			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
-				
+
 				<!-- Hover Play -->
 				<h2>Play on Hover</h2>
 				<p>Videos will autoplay and loop by default, but Wallpapers can also play on hover:</p>
-				
+
 				<pre class="example"><code class="language-javascript">$("#element").wallpaper({
 	hoverPlay: true,
 	source: {
@@ -97,22 +97,22 @@
 		webm: "path/to/video.webm"
 	}
 });</code></pre>
-				
+
 				<h5>Demo</h5>
 			</div>
 		</article>
-		
+
 		<div class="wallpapered bar" data-wallpaper-options='{"hoverPlay":"true","source":{"webm":"http://formstone.it/files/demo/oranges.webm","mp4":"http://formstone.it/files/demo/oranges.mp4","ogg":"http://formstone.it/files/demo/oranges.ogv"}}'></div>
-		
-		
+
+
 		<br /><br /><br />
-		
+
 		<!--
 		<article class="row page">
 			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
-				
+
 				<div class="wallpapered square" data-wallpaper-options='{"source":{"webm":"http://formstone.it/files/demo/oranges.webm","mp4":"http://formstone.it/files/demo/oranges.mp4","ogg":"http://formstone.it/files/demo/oranges.ogv"}}'></div>
-				
+
 				<div class="row">
 					<div class="mobile-full tablet-half desktop-half">
 						<div class="wallpapered" data-wallpaper-options='{"source":"http://formstone.it/files/demo/nasa-bw-1.jpg"}'></div>
@@ -121,11 +121,11 @@
 						<div class="wallpapered" data-wallpaper-options='{"source":"http://formstone.it/files/demo/nasa-bw-2.jpg"}'></div>
 					</div>
 				</div>
-				
+
 			</div>
 		</article>
 		-->
-		
+
 		<footer id="footer" class="row">
 			<div class="all-full copyright">
 				Made with &hearts; in Hampden
