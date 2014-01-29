@@ -77,7 +77,9 @@
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper");
 
-				_loadMedia(source, data);
+				if (data !== null) {
+					_loadMedia(source, data);
+				}
 			});
 		},
 
@@ -89,11 +91,14 @@
 		 */
 		play: function() {
 			return $(this).each(function() {
-				var data = $(this).data("wallpaper"),
-					$video = data.$container.find("video");
+				var data = $(this).data("wallpaper");
 
-				if ($video.length) {
-					$video[0].play();
+				if (data !== null) {
+					var $video = data.$container.find("video");
+
+					if ($video.length) {
+						$video[0].play();
+					}
 				}
 			});
 		},
@@ -106,11 +111,14 @@
 		 */
 		stop: function() {
 			return $(this).each(function() {
-				var data = $(this).data("wallpaper"),
-					$video = data.$container.find("video");
+				var data = $(this).data("wallpaper");
 
-				if ($video.length) {
-					$video[0].pause();
+				if (data !== null) {
+					var $video = data.$container.find("video");
+
+					if ($video.length) {
+						$video[0].pause();
+					}
 				}
 			});
 		}
