@@ -77,7 +77,7 @@
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper");
 
-				if (data !== null) {
+				if (data) {
 					_loadMedia(source, data);
 				}
 			});
@@ -93,7 +93,7 @@
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper");
 
-				if (data !== null) {
+				if (data) {
 					var $video = data.$container.find("video");
 
 					if ($video.length) {
@@ -113,7 +113,7 @@
 			return $(this).each(function() {
 				var data = $(this).data("wallpaper");
 
-				if (data !== null) {
+				if (data) {
 					var $video = data.$container.find("video");
 
 					if ($video.length) {
