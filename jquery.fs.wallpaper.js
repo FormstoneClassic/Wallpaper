@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.0.4 - 2014-02-06 
+ * Wallpaper v3.0.5 - 2014-02-17 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -11,7 +11,8 @@
 
 	var $window = $(window),
 		$body = $("body"),
-		nativeSupport = ("backgroundSize" in document.documentElement.style);
+		nativeSupport = ("backgroundSize" in document.documentElement.style),
+		isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test( (window.navigator.userAgent||window.navigator.vendor||window.opera) );
 
 	/**
 	 * @options
@@ -221,41 +222,39 @@
 	 * @name _loadImage
 	 * @description Loads source image
 	 * @param source [string] "Source image"
-	 * @param data [object] "Instance data"
+	 * @param data [object] "Instance data",
+	 * @param poster [boolean] "Flag for video poster"
 	 */
-	function _loadImage(source, data) {
+	function _loadImage(source, data, poster) {
 		var $imgContainer = $('<div class="wallpaper-media wallpaper-image"><img /></div>'),
 			$img = $imgContainer.find("img");
 
 		$img.one("load.wallpaper", function() {
-
 			if (nativeSupport) {
 				$imgContainer.addClass("native")
-							 .css({ backgroundImage: "url(" + data.source + ")" });
+							 .css({ backgroundImage: "url(" + source + ")" });
 			}
 
-			if (data.$container.find(".wallpaper-media").length < 1) {
-				// If it's the first image just append it
-				$imgContainer.appendTo(data.$container)
-							 .animate({ opacity: 1 }, data.speed);
-				data.isAnimating = false;
-				data.$target.trigger("wallpaper.loaded");
-			} else {
-				// Otherwise we need to animate it in
-				$imgContainer.appendTo(data.$container)
-						     .animate({ opacity: 1 }, data.speed, function() {
-								 // Remove the old image
-								 data.$container.find(".wallpaper-image").not(":last").remove();
-								 data.isAnimating = false;
-								 data.$target.trigger("wallpaper.loaded");
-							 });
-			}
+			// Append
+			$imgContainer.animate({ opacity: 1 }, data.speed, function() {
+				if (!poster) {
+					_cleanMedia(data);
+				}
+			});
 
-			data.$target.removeClass("loading");
+			// Set state
+			data.isAnimating = false;
+			data.$target.removeClass("loading")
+						.trigger("wallpaper.loaded");
 
+			// Resize
 			_onResize({ data: data });
-			data.onLoad.call();
-		}).attr("src", data.source);
+			if (!poster) {
+				data.onLoad.call();
+			}
+		}).attr("src", source);
+
+		$imgContainer.appendTo(data.$container);
 
 		// Check if image is cached
 		if ($img[0].complete || $img[0].readyState === 4) {
@@ -271,55 +270,66 @@
 	 * @param data [object] "Instance data"
 	 */
 	function _loadVideo(source, data) {
-		var $videoContainer = $('<div class="wallpaper-media wallpaper-video"></div>'),
-			html = '<video';
+		if (data.source.poster) {
+			_loadImage(data.source.poster, data, true);
+		}
 
-		if (data.loop) {
-			html += ' loop';
-		}
-		html += '>';
-		if (data.source.webm) {
-			html += '<source src="' + data.source.webm + '" type="video/webm" />';
-		}
-		if (data.source.mp4) {
-			html += '<source src="' + data.source.mp4 + '" type="video/mp4" />';
-		}
-		if (data.source.ogg) {
-			html += '<source src="' + data.source.ogg + '" type="video/ogg" />';
-		}
-		html += '</video>';
+		if (!isMobile) {
+			var $videoContainer = $('<div class="wallpaper-media wallpaper-video"></div>'),
+				html = '<video';
 
-		$videoContainer.append(html).find("video").one("loadedmetadata", function(e) {
-			if (data.$container.find(".wallpaper-media").length < 1) {
-				// If it's the first video just append it
+			if (data.loop) {
+				html += ' loop';
+			}
+			html += '>';
+			if (data.source.webm) {
+				html += '<source src="' + data.source.webm + '" type="video/webm" />';
+			}
+			if (data.source.mp4) {
+				html += '<source src="' + data.source.mp4 + '" type="video/mp4" />';
+			}
+			if (data.source.ogg) {
+				html += '<source src="' + data.source.ogg + '" type="video/ogg" />';
+			}
+			html += '</video>';
+
+			$videoContainer.append(html).find("video").one("loadedmetadata", function(e) {
+				// Append
 				$videoContainer.appendTo(data.$container)
-							   .animate({ opacity: 1 }, data.speed);
-				data.isAnimating = false;
-				data.$target.trigger("wallpaper.loaded");
+							   .animate({ opacity: 1 }, data.speed, function() { _cleanMedia(data); });
 
+				// Set state
+				data.isAnimating = false;
+				data.$target.removeClass("loading")
+							.trigger("wallpaper.loaded");
+
+				// Resize
+				_onResize({ data: data });
+				data.onLoad.call();
+
+				// Events
 				if (data.hoverPlay) {
 					data.$target.on("mouseover.boxer", pub.play)
 								.on("mouseout.boxer", pub.stop);
 				} else if (data.autoPlay) {
 					this.play();
 				}
-			} else {
-				// Otherwise we need to animate it in
-				$videoContainer.appendTo(data.$container)
-						       .animate({ opacity: 1 }, data.speed, function() {
-								   // Remove the old image
-								   data.$container.find(".wallpaper-image").not(":last").remove();
-								   data.isAnimating = false;
-								   data.$target.trigger("wallpaper.loaded");
-							   });
-			}
+			});
+		}
+	}
 
-			data.$target.removeClass("loading")
-						.trigger("wallpaper.loaded");
+	/**
+	 * @method private
+	 * @name _cleanMedia
+	 * @description Cleans up old media
+	 * @param data [object] "Instance data"
+	 */
+	function _cleanMedia(data) {
+		var $media = data.$container.find(".wallpaper-media");
 
-			_onResize({ data: data });
-			data.onLoad.call();
-		});
+		if ($media.length >= 1) {
+			$media.not(":last").remove();
+		}
 	}
 
 	/**

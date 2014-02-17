@@ -70,6 +70,7 @@
 
 				<pre class="example"><code class="language-javascript">$("#element").wallpaper({
 	source: {
+		poster: "path/to/poster.jpg",
 		mp4:  "path/to/video.mp4",
 		ogg:  "path/to/video.ogv",
 		webm: "path/to/video.webm"
@@ -80,7 +81,7 @@
 			</div>
 		</article>
 
-		<div class="wallpapered bar" data-wallpaper-options='{"source":{"webm":"http://formstone.it/files/demo/oranges.webm","mp4":"http://formstone.it/files/demo/oranges.mp4","ogg":"http://formstone.it/files/demo/oranges.ogv"}}'></div>
+		<div class="wallpapered bar" data-wallpaper-options='{"source":{"webm":"http://formstone.it/files/demo/oranges.webm","mp4":"http://formstone.it/files/demo/oranges.mp4","ogg":"http://formstone.it/files/demo/oranges.ogv","poster":"http://formstone.it/files/demo/oranges.jpg"}}'></div>
 
 		<article class="row page">
 			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
@@ -92,6 +93,7 @@
 				<pre class="example"><code class="language-javascript">$("#element").wallpaper({
 	hoverPlay: true,
 	source: {
+		poster: "path/to/poster.jpg",
 		mp4:  "path/to/video.mp4",
 		ogg:  "path/to/video.ogv",
 		webm: "path/to/video.webm"
@@ -102,10 +104,20 @@
 			</div>
 		</article>
 
-		<div class="wallpapered bar" data-wallpaper-options='{"hoverPlay":"true","source":{"webm":"http://formstone.it/files/demo/oranges.webm","mp4":"http://formstone.it/files/demo/oranges.mp4","ogg":"http://formstone.it/files/demo/oranges.ogv"}}'></div>
+		<div class="wallpapered bar" data-wallpaper-options='{"hoverPlay":"true","source":{"webm":"http://formstone.it/files/demo/oranges.webm","mp4":"http://formstone.it/files/demo/oranges.mp4","ogg":"http://formstone.it/files/demo/oranges.ogv","poster":"http://formstone.it/files/demo/oranges.jpg"}}'></div>
 
 
-		<br /><br /><br />
+		<article class="row page">
+			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
+
+				<!-- Mobile -->
+				<h2>Mobile Support</h2>
+				<p>Wallpaper will treat mobile browsers differently and only display the supplied video poster to those users. This is an intentional decision and avoids forcing users to download large video files.</p>
+
+			</div>
+		</article>
+
+		<br />
 
 		<!--
 		<article class="row page">
