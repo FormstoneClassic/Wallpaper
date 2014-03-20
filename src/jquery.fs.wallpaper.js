@@ -54,9 +54,11 @@
 			var $targets = $(this).each(function() {
 				var data = $(this).data("wallpaper");
 
-				data.$target.removeClass("wallpaper")
-							.off(".boxer");
-				data.$container.remove();
+				if (data) {
+					data.$target.removeClass("wallpaper")
+								.off(".boxer");
+					data.$container.remove();
+				}
 			});
 
 			if ($(".wallpaper").length < 1) {
