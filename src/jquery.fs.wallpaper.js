@@ -11,6 +11,7 @@
 	 * @param autoPlay [boolean] <true> "Autoplay video"
 	 * @param hoverPlay [boolean] <false> "Play video on hover"
 	 * @param loop [boolean] <true> "Loop video"
+	 * @param mute [boolean] <true> "Mute video"
 	 * @param onLoad [function] <$.noop> "On load callback"
 	 * @param onReady [function] <$.noop> "On ready callback"
 	 * @param source [string | object] <null> "Source image (string) or video (object)"
@@ -19,6 +20,7 @@
 		autoPlay: true,
 		hoverPlay: false,
 		loop: true,
+		mute: true,
 		onLoad: $.noop,
 		onReady: $.noop,
 		source: null,
@@ -274,6 +276,9 @@
 
 			if (data.loop) {
 				html += ' loop';
+			}
+			if (data.mute) {
+				html += ' muted';
 			}
 			html += '>';
 			if (data.source.webm) {

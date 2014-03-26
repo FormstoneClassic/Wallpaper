@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.0.6 - 2014-03-20 
+ * Wallpaper v3.0.7 - 2014-03-26 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -19,6 +19,7 @@
 	 * @param autoPlay [boolean] <true> "Autoplay video"
 	 * @param hoverPlay [boolean] <false> "Play video on hover"
 	 * @param loop [boolean] <true> "Loop video"
+	 * @param mute [boolean] <true> "Mute video"
 	 * @param onLoad [function] <$.noop> "On load callback"
 	 * @param onReady [function] <$.noop> "On ready callback"
 	 * @param source [string | object] <null> "Source image (string) or video (object)"
@@ -27,6 +28,7 @@
 		autoPlay: true,
 		hoverPlay: false,
 		loop: true,
+		mute: true,
 		onLoad: $.noop,
 		onReady: $.noop,
 		source: null,
@@ -282,6 +284,9 @@
 
 			if (data.loop) {
 				html += ' loop';
+			}
+			if (data.mute) {
+				html += ' muted';
 			}
 			html += '>';
 			if (data.source.webm) {
