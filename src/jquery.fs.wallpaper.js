@@ -270,7 +270,7 @@
 				}
 			});
 
-			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 5);
+			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 50);
 
 			data.$target.trigger("wallpaper.loaded");
 
@@ -338,7 +338,7 @@
 					}
 				});
 
-				setTimeout( function() { $videoContainer.css({ opacity: 1 }); }, 5);
+				setTimeout( function() { $videoContainer.css({ opacity: 1 }); }, 50);
 
 				data.$target.trigger("wallpaper.loaded");
 

@@ -1,21 +1,21 @@
  	.wallpaper { overflow: hidden; position: relative; }
- 	.wallpaper-container { height: 100%; overflow: hidden; position: absolute; top: 0; width: 100%; z-index: 0; }
+ 	.wallpaper .wallpaper-container { height: 100%; overflow: hidden; position: absolute; top: 0; width: 100%; z-index: 0; }
 
  	.wallpaper,
- 	.wallpaper-container {
-		-webkit-transition: none;
-		        transition: none;
+ 	.wallpaper .wallpaper-container {
+		-webkit-transition: none !important;
+		        transition: none !important;
 	}
 
- 	.wallpaper-media { left: 0; opacity: 0; position: absolute; top: 0;
-	 	-webkit-transition: opacity 0.5s linear;
-		        transition: opacity 0.5s linear;
+ 	.wallpaper .wallpaper-media { left: 0; opacity: 0; position: absolute; top: 0;
+	 	-webkit-transition: opacity 0.5s linear !important;
+		        transition: opacity 0.5s linear !important;
  	}
- 	.wallpaper-media img,
- 	.wallpaper-media video { display: block; height: 100%; width: 100%; }
+ 	.wallpaper .wallpaper-media img,
+ 	.wallpaper .wallpaper-media video { display: block; height: 100%; width: 100%; }
 
- 	.wallpaper-media.native { background-position: center; background-size: cover; height: 100%; width: 100%; }
- 	.wallpaper-media.native img { display: none; }
+ 	.wallpaper .wallpaper-media.native { background-position: center; background-size: cover; height: 100%; width: 100%; }
+ 	.wallpaper .wallpaper-media.native img { display: none; }
 
- 	.wallpaper-media.fixed { background-position: center; background-attachment: fixed; height: 100%; width: 100%; }
- 	.wallpaper-media.fixed img { display: none; }
+ 	.wallpaper .wallpaper-media.fixed { background-position: center; background-attachment: fixed; height: 100%; width: 100%; }
+ 	.wallpaper .wallpaper-media.fixed img { display: none; }
