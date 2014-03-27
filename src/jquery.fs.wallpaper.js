@@ -2,9 +2,11 @@
 	"use strict";
 
 	var $window = $(window),
-		$body = $("body"),
+		$body,
 		nativeSupport = ("backgroundSize" in document.documentElement.style),
-		isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test( (window.navigator.userAgent||window.navigator.vendor||window.opera) );
+		isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test( (window.navigator.userAgent||window.navigator.vendor||window.opera) ),
+		transitionEvent,
+		transitionSupported;
 
 	/**
 	 * @options
@@ -23,8 +25,7 @@
 		mute: true,
 		onLoad: $.noop,
 		onReady: $.noop,
-		source: null,
-		speed: 500
+		source: null
 	};
 
 	/**
@@ -126,6 +127,22 @@
 					}
 				}
 			});
+		},
+
+		/**
+		 * @method
+		 * @name unload
+		 * @description Unloads current media
+		 * @example $(".target").wallpaper("unload");
+		 */
+		unload: function() {
+			return $(this).each(function() {
+				var data = $(this).data("wallpaper");
+
+				if (data) {
+					_unloadMedia(data);
+				}
+			});
 		}
 	};
 
@@ -137,6 +154,15 @@
 	 */
 	function _init(opts) {
 		var data = $.extend({}, options, opts);
+
+		$body = $("body");
+		transitionEvent = _getTransitionEvent();
+		transitionSupported = (transitionEvent !== false);
+
+		// no transitions :(
+		if (!transitionSupported) {
+			transitionEvent = "transitionend.wallpaper";
+		}
 
 		// Apply to each
 		var $targets = $(this);
@@ -197,8 +223,6 @@
 		if (!data.isAnimating) {
 			// Check if the source is new
 			if (data.source !== source) {
-				data.$target.addClass("loading");
-
 				data.source = source;
 				data.isAnimating = true;
 
@@ -232,16 +256,23 @@
 			}
 
 			// Append
-			$imgContainer.animate({ opacity: 1 }, data.speed, function() {
-				if (!poster) {
-					_cleanMedia(data);
+			$imgContainer.on(transitionEvent, function(e) {
+				_killEvent(e);
+
+				if ($(e.target).is($imgContainer)) {
+					$imgContainer.off(transitionEvent);
+
+					data.isAnimating = false;
+
+					if (!poster) {
+						_cleanMedia(data);
+					}
 				}
 			});
 
-			// Set state
-			data.isAnimating = false;
-			data.$target.removeClass("loading")
-						.trigger("wallpaper.loaded");
+			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 1);
+
+			data.$target.trigger("wallpaper.loaded");
 
 			// Resize
 			_onResize({ data: data });
@@ -292,15 +323,24 @@
 			}
 			html += '</video>';
 
-			$videoContainer.append(html).find("video").one("loadedmetadata", function(e) {
-				// Append
-				$videoContainer.appendTo(data.$container)
-							   .animate({ opacity: 1 }, data.speed, function() { _cleanMedia(data); });
+			var $video = $videoContainer.append(html).find("video");
 
-				// Set state
-				data.isAnimating = false;
-				data.$target.removeClass("loading")
-							.trigger("wallpaper.loaded");
+			$video.one("loadedmetadata.wallpaper", function(e) {
+				$videoContainer.on(transitionEvent, function(e) {
+					_killEvent(e);
+
+					if ($(e.target).is($videoContainer)) {
+						data.isAnimating = false;
+
+						$videoContainer.off(transitionEvent);
+
+						_cleanMedia(data);
+					}
+				});
+
+				setTimeout( function() { $videoContainer.css({ opacity: 1 }); }, 1);
+
+				data.$target.trigger("wallpaper.loaded");
 
 				// Resize
 				_onResize({ data: data });
@@ -314,6 +354,8 @@
 					this.play();
 				}
 			});
+
+			$videoContainer.appendTo(data.$container);
 		}
 	}
 
@@ -324,10 +366,32 @@
 	 * @param data [object] "Instance data"
 	 */
 	function _cleanMedia(data) {
-		var $media = data.$container.find(".wallpaper-media");
+		var $mediaContainer = data.$container.find(".wallpaper-media");
 
-		if ($media.length >= 1) {
-			$media.not(":last").remove();
+		if ($mediaContainer.length >= 1) {
+			$mediaContainer.not(":last").remove();
+		}
+	}
+
+	/**
+	 * @method private
+	 * @name _uploadMedia
+	 * @description Unloads current media
+	 * @param data [object] "Instance data"
+	 */
+	function _unloadMedia(data) {
+		var $mediaContainer = data.$container.find(".wallpaper-media");
+
+		if ($mediaContainer.length >= 1) {
+			$mediaContainer.on(transitionEvent, function(e) {
+				_killEvent(e);
+
+				if ($(e.target).is($mediaContainer)) {
+					$(this).remove();
+
+					delete data.source;
+				}
+			}).css({ opacity: 0 });
 		}
 	}
 
@@ -338,10 +402,7 @@
 	 * @param e [object] "Event data"
 	 */
 	function _onResize(e) {
-		if (e.preventDefault) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
+		_killEvent(e);
 
 		var data = e.data;
 
@@ -433,6 +494,43 @@
 				naturalWidth:  $media[0].videoWidth
 			};
 		}
+		return false;
+	}
+
+	/**
+	 * @method private
+	 * @name _killEvent
+	 * @description Prevents default and stops propagation on event
+	 * @param e [object] "Event data"
+	 */
+	function _killEvent(e) {
+		if (e.preventDefault) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}
+
+	/**
+	 * @method private
+	 * @name _getTransitionEvent
+	 * @description Retuns a properly prefixed transitionend event
+	 * @return [string] "Properly prefixed event"
+	 */
+	function _getTransitionEvent() {
+		var transitions = {
+				'WebkitTransition': 'webkitTransitionEnd',
+				'MozTransition':    'transitionend',
+				'OTransition':      'oTransitionEnd',
+				'transition':       'transitionend'
+			},
+			test = document.createElement('div');
+
+		for (var type in transitions) {
+			if (transitions.hasOwnProperty(type) && type in test.style) {
+				return transitions[type] + ".wallpaper";
+			}
+		}
+
 		return false;
 	}
 
