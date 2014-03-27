@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.0.8 - 2014-03-27 
+ * Wallpaper v3.0.9 - 2014-03-27 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -254,7 +254,7 @@
 	 * @param poster [boolean] "Flag for video poster"
 	 */
 	function _loadImage(source, data, poster) {
-		var $imgContainer = $('<div class="wallpaper-media wallpaper-image"><img /></div>'),
+		var $imgContainer = $('<div class="wallpaper-media wallpaper-image" style="opacity: 0;"><img /></div>'),
 			$img = $imgContainer.find("img");
 
 		$img.one("load.wallpaper", function() {
@@ -278,7 +278,7 @@
 				}
 			});
 
-			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 1);
+			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 5);
 
 			data.$target.trigger("wallpaper.loaded");
 
@@ -310,7 +310,7 @@
 		}
 
 		if (!isMobile) {
-			var $videoContainer = $('<div class="wallpaper-media wallpaper-video"></div>'),
+			var $videoContainer = $('<div class="wallpaper-media wallpaper-video" style="opacity: 0;"></div>'),
 				html = '<video';
 
 			if (data.loop) {
@@ -346,7 +346,7 @@
 					}
 				});
 
-				setTimeout( function() { $videoContainer.css({ opacity: 1 }); }, 1);
+				setTimeout( function() { $videoContainer.css({ opacity: 1 }); }, 5);
 
 				data.$target.trigger("wallpaper.loaded");
 
