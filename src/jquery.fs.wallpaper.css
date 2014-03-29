@@ -15,8 +15,8 @@
  	.wallpaper .wallpaper-media video,
  	.wallpaper .wallpaper-media iframe { display: block; height: 100%; width: 100%; }
 
- 	.wallpaper .wallpaper-embed:after { content: ''; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: 1; }
- 	.wallpaper .wallpaper-embed iframe { pointer-events: none; z-index: 0; }
+ 	.wallpaper .wallpaper-embed.ready:after { content: ''; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: 1; }
+ 	.wallpaper .wallpaper-embed.ready iframe { pointer-events: none; z-index: 0; }
 
  	.wallpaper .wallpaper-media.native { background-position: center; background-size: cover; height: 100%; width: 100%; }
  	.wallpaper .wallpaper-media.native img { display: none; }
