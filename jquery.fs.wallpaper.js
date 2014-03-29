@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.0.10 - 2014-03-27 
+ * Wallpaper v3.0.10 - 2014-03-29 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -12,6 +12,9 @@
 	var $window = $(window),
 		$body,
 		nativeSupport = ("backgroundSize" in document.documentElement.style),
+		guid = 0,
+		embedReady = false,
+		embedQueue = [],
 		isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test( (window.navigator.userAgent||window.navigator.vendor||window.opera) ),
 		transitionEvent,
 		transitionSupported;
@@ -28,6 +31,7 @@
 	 */
 	var options = {
 		autoPlay: true,
+		embedRatio: 0.5625,
 		hoverPlay: false,
 		loop: true,
 		mute: true,
@@ -66,9 +70,10 @@
 				var data = $(this).data("wallpaper");
 
 				if (data) {
-					data.$target.removeClass("wallpaper")
-								.off(".boxer");
 					data.$container.remove();
+					data.$target.removeClass("wallpaper")
+								.off(".boxer")
+								.data("wallpaper", null);
 				}
 			});
 
@@ -99,6 +104,30 @@
 
 		/**
 		 * @method
+		 * @name pause
+		 * @description Pauses target video
+		 * @example $(".target").wallpaper("stop");
+		 */
+		pause: function() {
+			return $(this).each(function() {
+				var data = $(this).data("wallpaper");
+
+				if (data) {
+					if (data.isEmbed && data.player) {
+						data.player.pauseVideo();
+					} else {
+						var $video = data.$container.find("video");
+
+						if ($video.length) {
+							$video[0].pause();
+						}
+					}
+				}
+			});
+		},
+
+		/**
+		 * @method
 		 * @name play
 		 * @description Plays target video
 		 * @example $(".target").wallpaper("play");
@@ -108,33 +137,27 @@
 				var data = $(this).data("wallpaper");
 
 				if (data) {
-					var $video = data.$container.find("video");
+					if (data.isEmbed && data.player) {
+						data.player.playVideo();
+					} else {
+						var $video = data.$container.find("video");
 
-					if ($video.length) {
-						$video[0].play();
+						if ($video.length) {
+							$video[0].play();
+						}
 					}
 				}
 			});
 		},
 
 		/**
-		 * @method
+		 * @method private
 		 * @name stop
-		 * @description Stops target video
+		 * @description Deprecated; Aliased to "pause"
 		 * @example $(".target").wallpaper("stop");
 		 */
 		stop: function() {
-			return $(this).each(function() {
-				var data = $(this).data("wallpaper");
-
-				if (data) {
-					var $video = data.$container.find("video");
-
-					if ($video.length) {
-						$video[0].pause();
-					}
-				}
-			});
+			pub.pause.apply(this);
 		},
 
 		/**
@@ -202,6 +225,7 @@
 			$target.addClass("wallpaper loading")
 				   .append('<div class="wallpaper-container"></div>');
 
+			data.guid = guid++;
 			data.isAnimating = false;
 			data.$target = $target;
 			data.$container = data.$target.find(".wallpaper-container");
@@ -234,13 +258,20 @@
 				data.source = source;
 				data.isAnimating = true;
 
-				if (typeof source === "object") {
+				data.isEmbed = (typeof source === "string" && source.indexOf("youtube.com/embed") > -1);
+				/* isVimeo   = (typeof source === "string" && source.indexOf("player.vimeo.com/video") > -1); */
+
+				$("body").append('<script src="//www.youtube.com/player_api"></script>');
+
+				if (data.isEmbed) {
+					_loadEmbed(source, data);
+				} else if (typeof source === "object") {
 					_loadVideo(source, data);
 				} else {
 					_loadImage(source, data);
 				}
 			} else {
-				data.$target.trigger("wallpaper.loaded");
+				// data.$target.trigger("wallpaper.loaded");
 			}
 		}
 	}
@@ -254,7 +285,7 @@
 	 * @param poster [boolean] "Flag for video poster"
 	 */
 	function _loadImage(source, data, poster) {
-		var $imgContainer = $('<div class="wallpaper-media wallpaper-image" style="opacity: 0;"><img /></div>'),
+		var $imgContainer = $('<div class="wallpaper-media wallpaper-image"><img /></div>'),
 			$img = $imgContainer.find("img");
 
 		$img.one("load.wallpaper", function() {
@@ -280,7 +311,7 @@
 
 			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 50);
 
-			data.$target.trigger("wallpaper.loaded");
+			//data.$target.trigger("wallpaper.loaded");
 
 			// Resize
 			_onResize({ data: data });
@@ -293,7 +324,7 @@
 
 		// Check if image is cached
 		if ($img[0].complete || $img[0].readyState === 4) {
-			$img.trigger("load");
+			$img.trigger("load.wallpaper");
 		}
 	}
 
@@ -310,9 +341,10 @@
 		}
 
 		if (!isMobile) {
-			var $videoContainer = $('<div class="wallpaper-media wallpaper-video" style="opacity: 0;"></div>'),
-				html = '<video';
+			var $videoContainer = $('<div class="wallpaper-media wallpaper-video"></div>'),
+				html = '';
 
+			html += '<video';
 			if (data.loop) {
 				html += ' loop';
 			}
@@ -348,7 +380,7 @@
 
 				setTimeout( function() { $videoContainer.css({ opacity: 1 }); }, 50);
 
-				data.$target.trigger("wallpaper.loaded");
+				//data.$target.trigger("wallpaper.loaded");
 
 				// Resize
 				_onResize({ data: data });
@@ -357,13 +389,83 @@
 				// Events
 				if (data.hoverPlay) {
 					data.$target.on("mouseover.boxer", pub.play)
-								.on("mouseout.boxer", pub.stop);
+								.on("mouseout.boxer", pub.pause);
 				} else if (data.autoPlay) {
 					this.play();
 				}
 			});
 
 			$videoContainer.appendTo(data.$container);
+		}
+	}
+
+	/**
+	 * @method private
+	 * @name _loadEmbed
+	 * @description Loads YouTube video
+	 * @param source [string] "YouTube URL"
+	 * @param data [object] "Instance data"
+	 */
+	function _loadEmbed(source, data) {
+		if (!isMobile) {
+			if (!$("script[src*='www.youtube.com/iframe_api']").length) {
+				$("head").append('<script src="//www.youtube.com/iframe_api"></script>');
+			}
+
+			if (!embedReady) {
+				embedQueue.push({
+					source: source,
+					data: data
+				});
+			} else {
+				var $embedContainer = $('<div class="wallpaper-media wallpaper-embed"></div>'),
+					html = '';
+
+				html += '<iframe id="wallpaper' + data.guid + '" type="text/html" src="';
+				html += source + '?controls=0&rel=0&showinfo=0&enablejsapi=1&version=3&&playerapiid=wallpaper' + data.guid;
+				if (data.loop) {
+					html += '&loop=1';
+				}
+				// youtube draws play button if not set to autoplay...
+				html += '&autoplay=1';
+				html += '" frameborder="0" allowfullscreen></iframe>';
+
+				$embedContainer.append(html)
+							   .appendTo(data.$container);
+
+				data.playing = false;
+				data.player = new window.YT.Player("wallpaper" + data.guid, {
+					events: {
+						"onReady": function (e) {
+							if (data.mute) {
+								data.player.mute();
+							}
+
+							if (data.hoverPlay) {
+								data.$target.on("mouseover.boxer", pub.play)
+											.on("mouseout.boxer", pub.pause);
+							}
+						},
+						"onStateChange": function (e) {
+							if (!data.playing && e.data === window.YT.PlayerState.PLAYING) {
+								data.playing = true;
+
+								if (data.hoverPlay || !data.autoPlay) {
+									data.player.pauseVideo();
+								}
+
+								//data.$target.trigger("wallpaper.loaded");
+								data.onLoad.call();
+
+								data.$target.find(".wallpaper-media").css({ opacity: 1 });
+							}
+						}
+					}
+		        });
+
+				// Resize
+				_onResize({ data: data });
+			}
 		}
 	}
 
@@ -419,22 +521,22 @@
 
 		for (var i = 0, count = $mediaContainers.length; i < count; i++) {
 			var $mediaContainer = $mediaContainers.eq(i),
-				type = $mediaContainer.find("video").length ? "video" : "image",
+				type = (data.isEmbed) ? "iframe" : ($mediaContainer.find("video").length ? "video" : "img"),
 				$media = $mediaContainer.find(type);
 
 			// If media found and scaling is not natively support
-			if ($media.length && !(type === "image" && data.nativeSupport)) {
+			if ($media.length && !(type === "img" && data.nativeSupport)) {
 				var frameWidth = data.$target.outerWidth(),
 					frameHeight = data.$target.outerHeight(),
 					frameRatio = frameWidth / frameHeight,
-					naturalSize = _naturalSize($media);
+					naturalSize = _naturalSize(data, $media);
 
 				data.width = naturalSize.naturalWidth;
 				data.height = naturalSize.naturalHeight;
 				data.left = 0;
 				data.top = 0;
 
-				var mediaRatio = data.width / data.height;
+				var mediaRatio = (data.IsEmbed) ? data.embedRation : (data.width / data.height);
 
 				// First check the height
 				data.height = frameHeight;
@@ -476,11 +578,17 @@
 	 * @method private
 	 * @name _naturalSize
 	 * @description Determines natural size of target media
+	 * @param data [object] "Instance data"
 	 * @param $media [jQuery object] "Source media object"
 	 * @return [object | boolean] "Object containing natural height and width values or false"
 	 */
-	function _naturalSize($media) {
-		if ($media.is("img")) {
+	function _naturalSize(data, $media) {
+		if (data.isEmbed) {
+			return {
+				naturalHeight: 500,
+				naturalWidth:  500 / data.embedRatio
+			};
+		} else if ($media.is("img")) {
 			var node = $media[0];
 
 			if (typeof node.naturalHeight !== "undefined") {
@@ -541,6 +649,21 @@
 
 		return false;
 	}
+
+	/**
+	 * @method global
+	 * @name window.onYouTubeIframeAPIReady
+	 * @description Attaches YouTube players to active instances
+	 */
+	window.onYouTubeIframeAPIReady = function() {
+		embedReady = true;
+
+		for (var i in embedQueue) {
+			if (embedQueue.hasOwnProperty(i)) {
+				_loadEmbed(embedQueue[i].source, embedQueue[i].data);
+			}
+		}
+	};
 
 	$.fn.wallpaper = function(method) {
 		if (pub[method]) {

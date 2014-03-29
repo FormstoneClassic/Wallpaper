@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.0.10 - 2014-03-27 
+ * Wallpaper v3.0.10 - 2014-03-29 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -20,7 +20,11 @@
 		        transition: opacity 0.5s linear !important;
  	}
  	.wallpaper .wallpaper-media img,
- 	.wallpaper .wallpaper-media video { display: block; height: 100%; width: 100%; }
+ 	.wallpaper .wallpaper-media video,
+ 	.wallpaper .wallpaper-media iframe { display: block; height: 100%; width: 100%; }
+
+ 	.wallpaper .wallpaper-embed:after { content: ''; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: 1; }
+ 	.wallpaper .wallpaper-embed iframe { pointer-events: none; z-index: 0; }
 
  	.wallpaper .wallpaper-media.native { background-position: center; background-size: cover; height: 100%; width: 100%; }
  	.wallpaper .wallpaper-media.native img { display: none; }

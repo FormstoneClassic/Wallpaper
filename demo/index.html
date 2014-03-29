@@ -42,7 +42,7 @@
 				<header class="header">
 					<h1>Wallpaper Demo</h1>
 					<!-- <p>A technical demonstration of the jQuery plugin.</p> -->
-					<br />
+					<br>
 					<a href="http://formstone.it/wallpaper/" class="button">View Documentation</a>
 				</header>
 
@@ -110,33 +110,29 @@
 		<article class="row page">
 			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
 
+				<!-- YouTube -->
+				<h2>YouTube</h2>
+				<p>Create a video Wallpaper by simply defining proper source types:</p>
+
+				<pre class="example"><code class="language-javascript">$("#element").wallpaper({
+	source: "//www.youtube.com/embed/VIDEO_ID"
+});</code></pre>
+
+				<h5>Demo</h5>
+			</div>
+		</article>
+
+		<div class="wallpapered bar" data-wallpaper-options='{"source":"//www.youtube.com/embed/GdFRB7D53Do"}'></div>
+
+		<article class="row page">
+			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
+
 				<!-- Mobile -->
 				<h2>Mobile Support</h2>
 				<p>Wallpaper will treat mobile browsers differently and only display the supplied video poster to those users. This is an intentional decision and avoids forcing users to download large video files.</p>
 
 			</div>
 		</article>
-
-		<br />
-
-		<!--
-		<article class="row page">
-			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
-
-				<div class="wallpapered square" data-wallpaper-options='{"source":{"webm":"http://formstone.it/files/demo/oranges.webm","mp4":"http://formstone.it/files/demo/oranges.mp4","ogg":"http://formstone.it/files/demo/oranges.ogv"}}'></div>
-
-				<div class="row">
-					<div class="mobile-full tablet-half desktop-half">
-						<div class="wallpapered" data-wallpaper-options='{"source":"http://formstone.it/files/demo/nasa-bw-1.jpg"}'></div>
-					</div>
-					<div class="mobile-full tablet-half desktop-half">
-						<div class="wallpapered" data-wallpaper-options='{"source":"http://formstone.it/files/demo/nasa-bw-2.jpg"}'></div>
-					</div>
-				</div>
-
-			</div>
-		</article>
-		-->
 
 		<footer id="footer" class="row">
 			<div class="all-full copyright">
