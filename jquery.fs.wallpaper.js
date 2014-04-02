@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.0 - 2014-03-29 
+ * Wallpaper v3.1.1 - 2014-04-02 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -236,7 +236,7 @@
 			var source = data.source;
 			data.source = null;
 
-			_loadMedia(source, data);
+			_loadMedia(source, data, true);
 
 			data.onReady.call();
 		}
@@ -248,8 +248,9 @@
 	 * @description Determines how to handle source media
 	 * @param source [string | object] "Source image (string) or video (object)"
 	 * @param data [object] "Instance data"
+	 * @param firstLoad [boolean] "Flag for first load"
 	 */
-	function _loadMedia(source, data) {
+	function _loadMedia(source, data, firstLoad) {
 		// Check if the source is new
 		if (data.source !== source) {
 			data.source = source;
@@ -264,11 +265,11 @@
 				data.playing = false;
 				data.posterLoaded = false;
 
-				_loadYouTube(source, data);
+				_loadYouTube(source, data, firstLoad);
 			} else if (typeof source === "object") {
-				_loadVideo(source, data);
+				_loadVideo(source, data, firstLoad);
 			} else {
-				_loadImage(source, data);
+				_loadImage(source, data, false, firstLoad);
 			}
 		} else {
 			data.$target.trigger("wallpaper.loaded");
@@ -284,8 +285,9 @@
 	 * @param data [object] "Instance data",
 	 * @param poster [boolean] "Flag for video poster"
 	 */
-	function _loadImage(source, data, poster) {
-		var $imgContainer = $('<div class="wallpaper-media wallpaper-image"><img /></div>'),
+	function _loadImage(source, data, poster, firstLoad) {
+		var html = '<div class="wallpaper-media wallpaper-image' + ((firstLoad !== true) ? ' animated' : '') + '"><img /></div>',
+			$imgContainer = $(html),
 			$img = $imgContainer.find("img");
 
 		$img.one("load.wallpaper", function() {
@@ -312,7 +314,7 @@
 			// Resize
 			_onResize({ data: data });
 
-			if (!poster) {
+			if (!poster || firstLoad) {
 				data.$target.trigger("wallpaper.loaded");
 				data.onLoad.call(data.$target);
 			}
@@ -333,13 +335,15 @@
 	 * @param source [object] "Source video"
 	 * @param data [object] "Instance data"
 	 */
-	function _loadVideo(source, data) {
+	function _loadVideo(source, data, firstLoad) {
 		if (data.source.poster) {
-			_loadImage(data.source.poster, data, true);
+			_loadImage(data.source.poster, data, true, true);
+
+			firstLoad = false;
 		}
 
 		if (!isMobile) {
-			var html = '<div class="wallpaper-media wallpaper-video">';
+			var html = '<div class="wallpaper-media wallpaper-video' + ((firstLoad !== true) ? ' animated' : '') +'">';
 			html += '<video';
 			if (data.loop) {
 				html += ' loop';
@@ -402,7 +406,7 @@
 	 * @param source [string] "YouTube URL"
 	 * @param data [object] "Instance data"
 	 */
-	function _loadYouTube(source, data) {
+	function _loadYouTube(source, data, firstLoad) {
 		if (!data.videoId) {
 			var parts = source.match( /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/ );
 			data.videoId = parts[1];
@@ -414,7 +418,9 @@
 			}
 
 			data.posterLoaded = true;
-			_loadImage(data.poster, data, true);
+			_loadImage(data.poster, data, true, firstLoad);
+
+			firstLoad = false;
 		}
 
 		if (!isMobile) {
@@ -428,7 +434,7 @@
 					data: data
 				});
 			} else {
-				var html = '<div class="wallpaper-media wallpaper-embed">';
+				var html = '<div class="wallpaper-media wallpaper-embed' + ((firstLoad !== true) ? ' animated' : '') + '">';
 				html += '<iframe id="' + data.guid + '" type="text/html" src="';
 				// build fresh source
 				html += window.location.protocol + "//www.youtube.com/embed/" + data.videoId + "/";
@@ -473,7 +479,17 @@
 								data.$target.trigger("wallpaper.loaded");
 								data.onLoad.call(data.$target);
 
-								data.$target.find(".wallpaper-media").css({ opacity: 1 });
+								$embedContainer.on(transitionEvent, function(e) {
+									_killEvent(e);
+
+									if ($(e.target).is($embedContainer)) {
+										$embedContainer.off(transitionEvent);
+
+										_cleanMedia(data);
+									}
+								});
+
+								$embedContainer.css({ opacity: 1 });
 							}
 						}
 					}
@@ -495,7 +511,7 @@
 		var $mediaContainer = data.$container.find(".wallpaper-media");
 
 		if ($mediaContainer.length >= 1) {
-			$mediaContainer.not(":last").remove();
+			//$mediaContainer.not(":last").remove();
 		}
 	}
 
