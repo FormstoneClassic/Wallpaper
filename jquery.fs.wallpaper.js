@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.1 - 2014-04-02 
+ * Wallpaper v3.1.2 - 2014-04-08 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -309,7 +309,7 @@
 				}
 			});
 
-			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 50);
+			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 0);
 
 			// Resize
 			_onResize({ data: data });
@@ -378,7 +378,7 @@
 					}
 				});
 
-				setTimeout( function() { $videoContainer.css({ opacity: 1 }); }, 50);
+				setTimeout( function() { $videoContainer.css({ opacity: 1 }); }, 0);
 
 				// Resize
 				_onResize({ data: data });
@@ -414,7 +414,8 @@
 
 		if (!data.posterLoaded) {
 			if (!data.poster) {
-				data.poster = "http://img.youtube.com/vi/" + data.videoId + "/maxresdefault.jpg";
+				// data.poster = "http://img.youtube.com/vi/" + data.videoId + "/maxresdefault.jpg";
+				data.poster = "http://img.youtube.com/vi/" + data.videoId + "/0.jpg";
 			}
 
 			data.posterLoaded = true;
@@ -440,6 +441,7 @@
 				html += window.location.protocol + "//www.youtube.com/embed/" + data.videoId + "/";
 				html += '?controls=0&rel=0&showinfo=0&enablejsapi=1&version=3&&playerapiid=' + data.guid;
 				if (data.loop) {
+					//html += '&loop=1&playlist=' + data.videoId;
 					html += '&loop=1';
 				}
 				// youtube draws play button if not set to autoplay...
@@ -453,7 +455,7 @@
 
 				data.player = new window.YT.Player(data.guid, {
 					events: {
-						"onReady": function (e) {
+						onReady: function (e) {
 							// Fix for Safari's overly secure security settings...
 							data.$target.find(".wallpaper-embed").addClass("ready");
 
@@ -468,7 +470,7 @@
 											.on("mouseout.boxer", pub.pause);
 							}
 						},
-						"onStateChange": function (e) {
+						onStateChange: function (e) {
 							if (!data.playing && e.data === window.YT.PlayerState.PLAYING) {
 								data.playing = true;
 
@@ -490,6 +492,9 @@
 								});
 
 								$embedContainer.css({ opacity: 1 });
+							} else if (data.loop && data.playing && e.data === window.YT.PlayerState.ENDED) {
+								// fix looping option
+								data.player.playVideo();
 							}
 						}
 					}
