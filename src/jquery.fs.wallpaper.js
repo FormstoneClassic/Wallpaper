@@ -15,6 +15,7 @@
 	/**
 	 * @options
 	 * @param autoPlay [boolean] <true> "Autoplay video"
+	 * @param embedRatio [number] <1.777777> "Video / embed ratio (16/9)"
 	 * @param hoverPlay [boolean] <false> "Play video on hover"
 	 * @param loop [boolean] <true> "Loop video"
 	 * @param mute [boolean] <true> "Mute video"
@@ -24,7 +25,7 @@
 	 */
 	var options = {
 		autoPlay: true,
-		embedRatio: 0.5625,
+		embedRatio: 1.777777,
 		hoverPlay: false,
 		loop: true,
 		mute: true,

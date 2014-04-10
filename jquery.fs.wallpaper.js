@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.3 - 2014-04-10 
+ * Wallpaper v3.1.4 - 2014-04-10 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -23,6 +23,7 @@
 	/**
 	 * @options
 	 * @param autoPlay [boolean] <true> "Autoplay video"
+	 * @param embedRatio [number] <1.777777> "Video / embed ratio (16/9)"
 	 * @param hoverPlay [boolean] <false> "Play video on hover"
 	 * @param loop [boolean] <true> "Loop video"
 	 * @param mute [boolean] <true> "Mute video"
@@ -32,7 +33,7 @@
 	 */
 	var options = {
 		autoPlay: true,
-		embedRatio: 0.5625,
+		embedRatio: 1.777777,
 		hoverPlay: false,
 		loop: true,
 		mute: true,
