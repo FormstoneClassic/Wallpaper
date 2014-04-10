@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.2 - 2014-04-08 
+ * Wallpaper v3.1.3 - 2014-04-10 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -11,6 +11,7 @@
 
 	var $window = $(window),
 		$body,
+		$responders = null,
 		nativeSupport = ("backgroundSize" in document.documentElement.style),
 		guid = 0,
 		youTubeReady = false,
@@ -266,9 +267,10 @@
 				data.posterLoaded = false;
 
 				_loadYouTube(source, data, firstLoad);
-			} else if (typeof source === "object") {
+			} else if (typeof source === "object" && !source.fallback) {
 				_loadVideo(source, data, firstLoad);
 			} else {
+				// single image or responsive set
 				_loadImage(source, data, false, firstLoad);
 			}
 		} else {
@@ -286,14 +288,42 @@
 	 * @param poster [boolean] "Flag for video poster"
 	 */
 	function _loadImage(source, data, poster, firstLoad) {
-		var html = '<div class="wallpaper-media wallpaper-image' + ((firstLoad !== true) ? ' animated' : '') + '"><img /></div>',
-			$imgContainer = $(html),
-			$img = $imgContainer.find("img");
+		var $imgContainer = $('<div class="wallpaper-media wallpaper-image' + ((firstLoad !== true) ? ' animated' : '') + '"><img /></div>'),
+			$img = $imgContainer.find("img"),
+			newSource = source;
 
+		// Responsive image handling
+		if (typeof source === "object") {
+			var sources = [];
+			$imgContainer.addClass("wallpaper-responsive");
+
+			for (var i in source) {
+				if (source.hasOwnProperty(i)) {
+					var media = (i === "fallback") ? "(min-width: 0px)" : i;
+
+					if (media) {
+						var _mq = window.matchMedia(media.replace(Infinity, "100000px"));
+						_mq.addListener(_respond);
+						sources.push({
+							mq: _mq,
+							source: source[i]
+						});
+
+						if (_mq.matches) {
+							newSource = source[i];
+						}
+					}
+				}
+			}
+
+			$imgContainer.data("wallpaper-matches", sources);
+		}
+
+		// Load image
 		$img.one("load.wallpaper", function() {
 			if (nativeSupport) {
 				$imgContainer.addClass("native")
-							 .css({ backgroundImage: "url(" + source + ")" });
+							 .css({ backgroundImage: "url(" + newSource + ")" });
 			}
 
 			// Append
@@ -318,9 +348,12 @@
 				data.$target.trigger("wallpaper.loaded");
 				data.onLoad.call(data.$target);
 			}
-		}).attr("src", source);
+		}).attr("src", newSource);
 
 		data.$container.append($imgContainer);
+
+		// caches responsive images
+		$responders = $(".wallpaper-responsive");
 
 		// Check if image is cached
 		if ($img[0].complete || $img[0].readyState === 4) {
@@ -439,7 +472,7 @@
 				html += '<iframe id="' + data.guid + '" type="text/html" src="';
 				// build fresh source
 				html += window.location.protocol + "//www.youtube.com/embed/" + data.videoId + "/";
-				html += '?controls=0&rel=0&showinfo=0&enablejsapi=1&version=3&&playerapiid=' + data.guid;
+				html += '?controls=0&rel=0&showinfo=0&enablejsapi=1&version=3&playerapiid=' + data.guid;
 				if (data.loop) {
 					//html += '&loop=1&playlist=' + data.videoId;
 					html += '&loop=1';
@@ -608,6 +641,43 @@
 		$(".wallpaper").each(function() {
 			var data = $(this).data("wallpaper");
 			_onResize({ data: data });
+		});
+	}
+
+	/**
+	 * @method private
+	 * @name _respond
+	 * @description Handle media query changes
+	 */
+	function _respond() {
+		$responders.each(function() {
+			var $target = $(this),
+				$image = $target.find("img"),
+				data = $target.parents(".wallpaper").data("wallpaper"),
+				sources = $target.data("wallpaper-matches"),
+				index = 0;
+
+			for (var i = 0, count = sources.length; i < count; i++) {
+				if (sources.hasOwnProperty(i)) {
+					var match = sources[i].mq;
+
+					if (match && match.matches) {
+						index = i;
+					}
+				}
+			}
+
+			/*
+			if (nativeSupport) {
+				$target.css({ backgroundImage: "url(" + sources[index].source + ")" });
+			} else {
+				$image.attr("src", sources[index].source);
+			}
+			*/
+
+			_loadImage(sources[index].source, data, false, true);
+
+			$target.trigger("change.wallpaper");
 		});
 	}
 

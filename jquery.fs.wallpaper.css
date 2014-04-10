@@ -1,19 +1,20 @@
 /* 
- * Wallpaper v3.1.2 - 2014-04-08 
+ * Wallpaper v3.1.3 - 2014-04-10 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
  * Copyright 2014 Ben Plum; MIT Licensed 
  */ 
 
- 	.wallpaper { overflow: hidden; position: relative; }
- 	.wallpaper .wallpaper-container { height: 100%; overflow: hidden; position: absolute; top: 0; width: 100%; z-index: 0; }
-
- 	.wallpaper,
- 	.wallpaper .wallpaper-container {
+	.wallpaper,
+ 	.wallpaper .wallpaper-container,
+ 	.wallpaper .wallpaper-media {
 		-webkit-transition: none !important;
 		        transition: none !important;
 	}
+
+	.wallpaper { overflow: hidden; position: relative; }
+ 	.wallpaper .wallpaper-container { height: 100%; overflow: hidden; position: absolute; top: 0; width: 100%; z-index: 0; }
 
  	.wallpaper .wallpaper-media { left: 0; opacity: 0; position: absolute; top: 0; }
  	.wallpaper .wallpaper-media.animated {

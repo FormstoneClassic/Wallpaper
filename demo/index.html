@@ -63,6 +63,27 @@
 		<article class="row page">
 			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
 
+				<!-- Basic -->
+				<h2>Responsive</h2>
+				<p></p>
+
+				<pre class="example"><code class="language-javascript">$("#element").wallpaper({
+	source: {
+		"fallback": "path/to/image_small.jpg",
+		"(min-width: 980px)": "path/to/image_large.jpg"
+	}
+});</code></pre>
+				<pre class="example"><code class="language-markup">&lt;div id="element"&gt;&lt;/div&gt;</code></pre>
+
+				<h5>Demo</h5>
+			</div>
+		</article>
+
+		<div class="wallpapered bar" data-wallpaper-options='{"source":{"fallback":"http://formstone.it/files/demo/nasa-bw-1.jpg","(min-width: 980px)":"http://formstone.it/files/demo/nasa-bw-2.jpg"}}'></div>
+
+		<article class="row page">
+			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
+
 				<!-- Video -->
 				<h2>Video</h2>
 				<p>Create a video Wallpaper by defining proper browser-specific source files:</p>
