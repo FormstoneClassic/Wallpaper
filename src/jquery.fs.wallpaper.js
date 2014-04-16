@@ -483,9 +483,6 @@
 				data.player = new window.YT.Player(data.guid, {
 					events: {
 						onReady: function (e) {
-							// Fix for Safari's overly secure security settings...
-							data.$target.find(".wallpaper-embed").addClass("ready");
-
 							data.player.setPlaybackQuality("highres");
 
 							if (data.mute) {
@@ -495,7 +492,13 @@
 							if (data.hoverPlay) {
 								data.$target.on("mouseover.boxer", pub.play)
 											.on("mouseout.boxer", pub.pause);
+							} else if (data.autoPlay) {
+								// make sure the video plays
+								data.player.playVideo();
 							}
+
+							// Fix for Safari's overly secure security settings...
+							data.$target.find(".wallpaper-embed").addClass("ready");
 						},
 						onStateChange: function (e) {
 							if (!data.playing && e.data === window.YT.PlayerState.PLAYING) {
