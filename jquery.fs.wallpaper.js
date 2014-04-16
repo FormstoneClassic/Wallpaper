@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.6 - 2014-04-16 
+ * Wallpaper v3.1.7 - 2014-04-16 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -99,6 +99,11 @@
 				var data = $(this).data("wallpaper");
 
 				if (data) {
+					if (typeof source === "object" && source.poster) {
+						data.poster = source.poster;
+						source = source.source;
+					}
+
 					_loadMedia(source, data);
 				}
 			});
@@ -115,7 +120,7 @@
 				var data = $(this).data("wallpaper");
 
 				if (data) {
-					if (data.isYouTube && data.player) {
+					if (data.isYouTube && data.playerReady) {
 						data.player.pauseVideo();
 					} else {
 						var $video = data.$container.find("video");
@@ -139,7 +144,7 @@
 				var data = $(this).data("wallpaper");
 
 				if (data) {
-					if (data.isYouTube && data.player) {
+					if (data.isYouTube && data.playerReady) {
 						data.player.playVideo();
 					} else {
 						var $video = data.$container.find("video");
@@ -224,10 +229,11 @@
 		if (!$target.hasClass("wallpaper")) {
 			$.extend(data, $target.data("wallpaper-options"));
 
-			$target.addClass("wallpaper loading")
+			$target.addClass("wallpaper")
 				   .append('<div class="wallpaper-container"></div>');
 
 			data.guid = "wallpaper-" + (guid++);
+			data.youTubeGuid = 0;
 			data.$target = $target;
 			data.$container = data.$target.find(".wallpaper-container");
 
@@ -262,10 +268,12 @@
 				// var parts = source.match( /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/ );
 				var parts = source.match( /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i );
 				data.isYouTube = (parts && parts.length >= 1);
+				data.videoId = parts[1];
 			}
 
 			if (data.isYouTube) {
 				data.playing = false;
+				data.playerReady = false;
 				data.posterLoaded = false;
 
 				_loadYouTube(source, data, firstLoad);
@@ -460,8 +468,9 @@
 		}
 
 		if (!isMobile) {
-			if (!$("script[src*='www.youtube.com/iframe_api']").length) {
-				$("head").append('<script src="' + window.location.protocol + '//www.youtube.com/iframe_api"></script>');
+			if (!$("script[src*='youtube.com/iframe_api']").length) {
+				// $("head").append('<script src="' + window.location.protocol + '//www.youtube.com/iframe_api"></script>');
+				$("head").append('<script src="//www.youtube.com/iframe_api"></script>');
 			}
 
 			if (!youTubeReady) {
@@ -470,11 +479,15 @@
 					data: data
 				});
 			} else {
-				var html = '<div class="wallpaper-media wallpaper-embed' + ((firstLoad !== true) ? ' animated' : '') + '">';
-				html += '<iframe id="' + data.guid + '" type="text/html" src="';
+				var guid = data.guid + "_" + (data.youTubeGuid++),
+					html = '';
+
+				html += '<div class="wallpaper-media wallpaper-embed' + ((firstLoad !== true) ? ' animated' : '') + '">';
+				html += '<iframe id="' + guid + '" type="text/html" src="';
 				// build fresh source
-				html += window.location.protocol + "//www.youtube.com/embed/" + data.videoId + "/";
-				html += '?controls=0&rel=0&showinfo=0&enablejsapi=1&version=3&playerapiid=' + data.guid;
+				// html += window.location.protocol + "//www.youtube.com/embed/" + data.videoId + "/";
+				html += "//www.youtube.com/embed/" + data.videoId + "/";
+				html += '?controls=0&rel=0&showinfo=0&enablejsapi=1&version=3&playerapiid=' + guid;
 				if (data.loop) {
 					//html += '&loop=1&playlist=' + data.videoId;
 					html += '&loop=1';
@@ -488,9 +501,15 @@
 				var $embedContainer = $(html);
 				data.$container.append($embedContainer);
 
-				data.player = new window.YT.Player(data.guid, {
+				if (data.player) {
+					data.oldPlayer = data.player;
+					data.player = null;
+				}
+
+				data.player = new window.YT.Player(guid, {
 					events: {
 						onReady: function (e) {
+							data.playerReady = true;
 							data.player.setPlaybackQuality("highres");
 
 							if (data.mute) {
@@ -555,6 +574,7 @@
 
 		if ($mediaContainer.length >= 1) {
 			$mediaContainer.not(":last").remove();
+			data.oldPlayer = null;
 		}
 	}
 
