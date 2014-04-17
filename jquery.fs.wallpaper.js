@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.8 - 2014-04-17 
+ * Wallpaper v3.1.9 - 2014-04-17 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -473,7 +473,7 @@
 		if (!isMobile) {
 			if (!$("script[src*='youtube.com/iframe_api']").length) {
 				// $("head").append('<script src="' + window.location.protocol + '//www.youtube.com/iframe_api"></script>');
-				$("head").append('<script src="//www.youtube.com/iframe_api"></script>');
+				$("head").append('<script src="https://www.youtube.com/iframe_api"></script>');
 			}
 
 			if (!youTubeReady) {
@@ -489,7 +489,7 @@
 				html += '<iframe id="' + guid + '" type="text/html" src="';
 				// build fresh source
 				// html += window.location.protocol + "//www.youtube.com/embed/" + data.videoId + "/";
-				html += "//www.youtube.com/embed/" + data.videoId + "/";
+				html += "https://www.youtube.com/embed/" + data.videoId + "/";
 				html += '?controls=0&rel=0&showinfo=0&enablejsapi=1&version=3&playerapiid=' + guid;
 				if (data.loop) {
 					//html += '&loop=1&playlist=' + data.videoId;
