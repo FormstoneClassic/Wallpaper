@@ -482,7 +482,7 @@
 				// build fresh source
 				// html += window.location.protocol + "//www.youtube.com/embed/" + data.videoId + "/";
 				html += "https://www.youtube.com/embed/" + data.videoId + "/";
-				html += '?controls=0&rel=0&showinfo=0&enablejsapi=1&version=3&playerapiid=' + guid;
+				html += '?controls=0&rel=0&showinfo=0&wmode=transparent&enablejsapi=1&version=3&playerapiid=' + guid;
 				if (data.loop) {
 					//html += '&loop=1&playlist=' + data.videoId;
 					html += '&loop=1';
