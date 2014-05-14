@@ -275,7 +275,48 @@
 			} else if (typeof source === "object" && !source.fallback) {
 				_loadVideo(source, data, firstLoad);
 			} else {
-				// single image or responsive set
+				// clear old events
+				if (data.responsiveSource) {
+					for (var i in data.responsiveSource) {
+						if (data.responsiveSource.hasOwnProperty(i)) {
+							data.responsiveSource[i].mq.removeListener(_respond);
+						}
+					}
+				}
+
+				data.responsive = false;
+				data.responsiveSource = null;
+
+				// Responsive image handling
+				if (typeof source === "object") {
+					var sources = [],
+						newSource;
+
+					for (var j in source) {
+						if (source.hasOwnProperty(j)) {
+							var media = (j === "fallback") ? "(min-width: 0px)" : j;
+
+							if (media) {
+								var _mq = window.matchMedia(media.replace(Infinity, "100000px"));
+								_mq.addListener(_respond);
+								sources.push({
+									mq: _mq,
+									source: source[j]
+								});
+
+								if (_mq.matches) {
+									newSource = source[j];
+								}
+							}
+						}
+					}
+
+					data.responsive = true;
+					data.responsiveSource = sources;
+					source = newSource;
+				}
+
+				// single or responsive set
 				_loadImage(source, data, false, firstLoad);
 			}
 		} else {
@@ -297,33 +338,6 @@
 			$img = $imgContainer.find("img"),
 			newSource = source;
 
-		// Responsive image handling
-		if (typeof source === "object") {
-			var sources = [];
-			$imgContainer.addClass("wallpaper-responsive");
-
-			for (var i in source) {
-				if (source.hasOwnProperty(i)) {
-					var media = (i === "fallback") ? "(min-width: 0px)" : i;
-
-					if (media) {
-						var _mq = window.matchMedia(media.replace(Infinity, "100000px"));
-						_mq.addListener(_respond);
-						sources.push({
-							mq: _mq,
-							source: source[i]
-						});
-
-						if (_mq.matches) {
-							newSource = source[i];
-						}
-					}
-				}
-			}
-
-			$imgContainer.data("wallpaper-matches", sources);
-		}
-
 		// Load image
 		$img.one("load.wallpaper", function() {
 			if (nativeSupport) {
@@ -344,7 +358,13 @@
 				}
 			});
 
-			setTimeout( function() { $imgContainer.css({ opacity: 1 }); }, 0);
+			setTimeout( function() {
+				$imgContainer.css({ opacity: 1 });
+
+				if (data.responsive) {
+					_cleanMedia(data);
+				}
+			}, 0);
 
 			// Resize
 			_onResize({ data: data });
@@ -353,12 +373,16 @@
 				data.$target.trigger("wallpaper.loaded");
 				data.onLoad.call(data.$target);
 			}
+
+			// caches responsive images
+			$responders = $(".wallpaper-responsive");
 		}).attr("src", newSource);
 
-		data.$container.append($imgContainer);
+		if (data.responsive) {
+			$imgContainer.addClass("wallpaper-responsive");
+		}
 
-		// caches responsive images
-		$responders = $(".wallpaper-responsive");
+		data.$container.append($imgContainer);
 
 		// Check if image is cached
 		if ($img[0].complete || $img[0].readyState === 4) {
@@ -571,6 +595,8 @@
 			$mediaContainer.not(":last").remove();
 			data.oldPlayer = null;
 		}
+
+		$responders = $(".wallpaper-responsive");
 	}
 
 	/**
@@ -674,7 +700,7 @@
 			var $target = $(this),
 				$image = $target.find("img"),
 				data = $target.parents(".wallpaper").data("wallpaper"),
-				sources = $target.data("wallpaper-matches"),
+				sources = data.responsiveSource,
 				index = 0;
 
 			for (var i = 0, count = sources.length; i < count; i++) {
@@ -686,14 +712,6 @@
 					}
 				}
 			}
-
-			/*
-			if (nativeSupport) {
-				$target.css({ backgroundImage: "url(" + sources[index].source + ")" });
-			} else {
-				$image.attr("src", sources[index].source);
-			}
-			*/
 
 			_loadImage(sources[index].source, data, false, true);
 
