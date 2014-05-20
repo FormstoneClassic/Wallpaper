@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.13 - 2014-05-19 
+ * Wallpaper v3.1.14 - 2014-05-20 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -371,7 +371,7 @@
 			setTimeout( function() {
 				$imgContainer.css({ opacity: 1 });
 
-				if (data.responsive) {
+				if (data.responsive && firstLoad) {
 					_cleanMedia(data);
 				}
 			}, 0);

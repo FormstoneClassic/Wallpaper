@@ -363,7 +363,7 @@
 			setTimeout( function() {
 				$imgContainer.css({ opacity: 1 });
 
-				if (data.responsive) {
+				if (data.responsive && firstLoad) {
 					_cleanMedia(data);
 				}
 			}, 0);
