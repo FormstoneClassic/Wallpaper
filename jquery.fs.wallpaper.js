@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.14 - 2014-05-20 
+ * Wallpaper v3.1.15 - 2014-05-21 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -31,7 +31,7 @@
 	 * @param mute [boolean] <true> "Mute video"
 	 * @param onLoad [function] <$.noop> "On load callback"
 	 * @param onReady [function] <$.noop> "On ready callback"
-	 * @param source [string | object] <null> "Source image (string) or video (object)"
+	 * @param source [string | object] <null> "Source image (string or object) or video (object) or YouTube (object)"
 	 */
 	var options = {
 		autoPlay: true,
@@ -93,7 +93,7 @@
 		 * @method
 		 * @name load
 		 * @description Loads source media
-		 * @param source [string | object] "Source image (string) or video (object)"
+		 * @param source [string | object] "Source image (string) or video (object) or YouTube (object); { source: { poster: <"">, video: <"" or {}>  } }"
 		 * @example $(".target").wallpaper("load", "path/to/image.jpg");
 		 */
 		load: function(source) {
@@ -101,11 +101,6 @@
 				var data = $(this).data("wallpaper");
 
 				if (data) {
-					if (typeof source === "object" && source.poster) {
-						data.poster = source.poster;
-						source = source.source;
-					}
-
 					_loadMedia(source, data);
 				}
 			});
@@ -262,14 +257,14 @@
 	 */
 	function _loadMedia(source, data, firstLoad) {
 		// Check if the source is new
-		if (data.source !== source) {
+		if (source !== data.source) {
 			data.source = source;
 			data.isYouTube = false;
 
 			// Check YouTube
-			if (typeof source === "string") {
+			if (typeof source === "object" && typeof source.video === "string") {
 				// var parts = source.match( /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/ );
-				var parts = source.match( /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i );
+				var parts = source.video.match( /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i );
 				if (parts && parts.length >= 1) {
 					data.isYouTube = true;
 					data.videoId = parts[1];
@@ -277,15 +272,17 @@
 			}
 
 			if (data.isYouTube) {
+				// youtube video
 				data.playing = false;
 				data.playerReady = false;
 				data.posterLoaded = false;
 
 				_loadYouTube(source, data, firstLoad);
-			} else if (typeof source === "object" && !source.fallback) {
+			} else if (typeof source === "object" && !source.hasOwnProperty("fallback")) {
+				// html5 video
 				_loadVideo(source, data, firstLoad);
 			} else {
-				// clear old events
+				// regular old image
 				if (data.responsiveSource) {
 					for (var i in data.responsiveSource) {
 						if (data.responsiveSource.hasOwnProperty(i)) {
@@ -485,13 +482,13 @@
 		}
 
 		if (!data.posterLoaded) {
-			if (!data.poster) {
-				// data.poster = "http://img.youtube.com/vi/" + data.videoId + "/maxresdefault.jpg";
-				data.poster = "http://img.youtube.com/vi/" + data.videoId + "/0.jpg";
+			if (!data.source.poster) {
+				// data.source.poster = "http://img.youtube.com/vi/" + data.videoId + "/maxresdefault.jpg";
+				data.source.poster = "http://img.youtube.com/vi/" + data.videoId + "/0.jpg";
 			}
 
 			data.posterLoaded = true;
-			_loadImage(data.poster, data, true, firstLoad);
+			_loadImage(data.source.poster, data, true, firstLoad);
 
 			firstLoad = false;
 		}
@@ -533,9 +530,8 @@
 						enablejsapi: 1,
 						version: 3,
 						playerapiid: guid,
-						loop: 1,
+						loop: (data.loop) ? 1 : 0,
 						autoplay: 1,
-						/* loop: ((data.loop) ? 1 : 0), */
 						origin: window.location.protocol + "//" + window.location.host
 					},
 					events: {
@@ -543,7 +539,7 @@
 							/* console.log("onReady", e); */
 
 							data.playerReady = true;
-							data.player.setPlaybackQuality("highres");
+							/* data.player.setPlaybackQuality("highres"); */
 
 							if (data.mute) {
 								data.player.mute();

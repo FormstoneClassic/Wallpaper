@@ -132,17 +132,20 @@
 
 				<!-- YouTube -->
 				<h2>YouTube</h2>
-				<p>Create a YouTube powered Wallpaper by passing the youtube embed URL as the source:</p>
+				<p>Create a YouTube powered Wallpaper by passing the youtube embed URL as the source. If you do not define a poster Wallpaper will use the one provided by YouTube:</p>
 
 				<pre class="example"><code class="language-javascript">$("#element").wallpaper({
-	source: "//www.youtube.com/embed/VIDEO_ID"
+	source: {
+		poster: "path/to/poster.jpg",
+		video: "//www.youtube.com/embed/VIDEO_ID"
+	}
 });</code></pre>
 
 				<h5>Demo</h5>
 			</div>
 		</article>
 
-		<div class="wallpapered bar" data-wallpaper-options='{"source":"//www.youtube.com/embed/tKONNhMvPtI"}'></div>
+		<div class="wallpapered bar" data-wallpaper-options='{"source":{"video":"//www.youtube.com/embed/tKONNhMvPtI"}}'></div>
 
 		<article class="row page">
 			<div class="mobile-full tablet-full desktop-8 desktop-push-2">
