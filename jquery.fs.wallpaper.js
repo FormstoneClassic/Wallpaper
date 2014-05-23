@@ -349,7 +349,7 @@
 		$img.one("load.wallpaper", function() {
 			if (nativeSupport) {
 				$imgContainer.addClass("native")
-							 .css({ backgroundImage: "url('" + encodeURI(newSource) + "')" });
+							 .css({ backgroundImage: "url('" + newSource + "')" });
 			}
 
 			// Append
