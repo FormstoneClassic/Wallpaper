@@ -73,7 +73,7 @@
 				}
 			});
 
-			if ($(".wallpaper").length < 1) {
+			if (typeof $body !== "undefined" && typeof $window !== "undefined" && $(".wallpaper").length < 1) {
 				$body.removeClass("wallpaper-inititalized");
 				$window.off(".wallpaper");
 			}
@@ -488,7 +488,7 @@
 		if (!isMobile) {
 			if (!$("script[src*='youtube.com/iframe_api']").length) {
 				// $("head").append('<script src="' + window.location.protocol + '//www.youtube.com/iframe_api"></script>');
-				$("head").append('<script src="https://www.youtube.com/iframe_api"></script>');
+				$("head").append('<script src="//www.youtube.com/iframe_api"></script>');
 			}
 
 			if (!youTubeReady) {
