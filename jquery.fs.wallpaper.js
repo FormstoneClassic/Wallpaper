@@ -1,5 +1,5 @@
 /* 
- * Wallpaper v3.1.17 - 2014-05-31 
+ * Wallpaper v3.1.18 - 2014-06-16 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
@@ -20,7 +20,8 @@
 		isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(UA),
 		isSafari = (UA.toLowerCase().indexOf('safari') >= 0) && (UA.toLowerCase().indexOf('chrome') < 0),
 		transitionEvent,
-		transitionSupported;
+		transitionSupported,
+		respondTimer;
 
 	/**
 	 * @options
@@ -286,7 +287,7 @@
 				if (data.responsiveSource) {
 					for (var i in data.responsiveSource) {
 						if (data.responsiveSource.hasOwnProperty(i)) {
-							data.responsiveSource[i].mq.removeListener(_respond);
+							data.responsiveSource[i].mq.removeListener(_onRespond);
 						}
 					}
 				}
@@ -305,7 +306,7 @@
 
 							if (media) {
 								var _mq = window.matchMedia(media.replace(Infinity, "100000px"));
-								_mq.addListener(_respond);
+								_mq.addListener(_onRespond);
 								sources.push({
 									mq: _mq,
 									source: source[j]
@@ -718,10 +719,21 @@
 
 	/**
 	 * @method private
-	 * @name _respond
+	 * @name _onRespond
 	 * @description Handle media query changes
 	 */
-	function _respond() {
+	function _onRespond() {
+		respondTimer = _startTimer(respondTimer, 5, _doRespond);
+	}
+
+	/**
+	 * @method private
+	 * @name _doRespond
+	 * @description Handle media query changes
+	 */
+	function _doRespond() {
+		_clearTimer(respondTimer);
+
 		$responders.each(function() {
 			var $target = $(this),
 				$image = $target.find("img"),
@@ -743,6 +755,33 @@
 
 			$target.trigger("change.wallpaper");
 		});
+	}
+
+	/**
+	 * @method private
+	 * @name _startTimer
+	 * @description Starts an internal timer
+	 * @param timer [int] "Timer ID"
+	 * @param time [int] "Time until execution"
+	 * @param callback [int] "Function to execute"
+	 * @param interval [boolean] "Flag for recurring interval"
+	 */
+	function _startTimer(timer, time, func, interval) {
+		_clearTimer(timer, interval);
+		return setTimeout(func, time);
+	}
+
+	/**
+	 * @method private
+	 * @name _clearTimer
+	 * @description Clears an internal timer
+	 * @param timer [int] "Timer ID"
+	 */
+	function _clearTimer(timer) {
+		if (timer !== null) {
+			clearInterval(timer);
+			timer = null;
+		}
 	}
 
 	/**
