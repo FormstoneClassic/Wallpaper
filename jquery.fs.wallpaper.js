@@ -39,7 +39,7 @@
 		embedRatio: 1.777777,
 		hoverPlay: false,
 		loop: true,
-		mute: true,
+		mute: false,
 		onLoad: $.noop,
 		onReady: $.noop,
 		source: null
