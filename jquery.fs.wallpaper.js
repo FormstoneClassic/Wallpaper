@@ -130,6 +130,31 @@
 				}
 			});
 		},
+                
+                /**
+                 * Added by Edouard Kombo
+		 * @method
+		 * @name setVolume
+		 * @description Set video Volume
+		 * @example $(".target").wallpaper("setVolume", "0.5");
+                 */
+                setVolume: function(number) {
+                    return $(this).each(function() {
+                        var data = $(this).data("wallpaper");
+
+                        if (data) {
+                            if (data.isYouTube && data.playerReady) {
+                                    data.player.pauseVideo();
+                            } else {
+                                var $video = data.$container.find("video");
+
+                                if ($video.length) {
+                                        $video[0].volume = number;
+                                }
+                            }
+                        }
+                    });                   
+                },                
 
 		/**
 		 * @method
