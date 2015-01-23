@@ -29,6 +29,7 @@
 	var options = {
 		autoPlay: true,
 		embedRatio: 1.777777,
+		fixed: false,
 		hoverPlay: false,
 		loop: true,
 		mute: true,
@@ -344,6 +345,11 @@
 				$imgContainer.addClass("native")
 							 .css({ backgroundImage: "url('" + newSource + "')" });
 			}
+
+			// If fixed background option passed, apply fixed class
+            if (data.fixed) {
+                $imgContainer.addClass("fixed");
+            }
 
 			// Append
 			$imgContainer.on(transitionEvent, function(e) {
