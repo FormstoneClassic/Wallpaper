@@ -334,7 +334,7 @@
 	 * @param poster [boolean] "Flag for video poster"
 	 */
 	function _loadImage(source, data, poster, firstLoad) {
-		var $imgContainer = $('<div class="wallpaper-media wallpaper-image' + ((firstLoad !== true) ? ' animated' : '') + '"><img /></div>'),
+		var $imgContainer = $('<div class="wallpaper-media wallpaper-image' + ((firstLoad !== true) ? ' animated' : '') + '"><img alt="" /></div>'),
 			$img = $imgContainer.find("img"),
 			newSource = source;
 

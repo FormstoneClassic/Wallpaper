@@ -1,9 +1,9 @@
 /* 
- * Wallpaper v3.1.18 - 2014-11-25 
+ * Wallpaper v3.1.18 - 2015-02-06 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
  * http://formstone.it/wallpaper/ 
  * 
- * Copyright 2014 Ben Plum; MIT Licensed 
+ * Copyright 2015 Ben Plum; MIT Licensed 
  */ 
 
 ;(function ($, window) {
@@ -342,7 +342,7 @@
 	 * @param poster [boolean] "Flag for video poster"
 	 */
 	function _loadImage(source, data, poster, firstLoad) {
-		var $imgContainer = $('<div class="wallpaper-media wallpaper-image' + ((firstLoad !== true) ? ' animated' : '') + '"><img /></div>'),
+		var $imgContainer = $('<div class="wallpaper-media wallpaper-image' + ((firstLoad !== true) ? ' animated' : '') + '"><img alt="" /></div>'),
 			$img = $imgContainer.find("img"),
 			newSource = source;
 
