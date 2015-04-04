@@ -16,10 +16,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/benplum/Wallpaper"
+    "url": "https://github.com/FormstoneClassic/Wallpaper"
   },
-  "homepage": "http://formstone.it/wallpaper/",
-  "demo": "http://formstone.it/components/Wallpaper/demo/index.html",
+  "homepage": "http://classic.formstone.it/wallpaper/",
+  "demo": "http://classic.formstone.it/components/Wallpaper/demo/index.html",
   "license": "MIT",
   "author": {
     "name": "Ben Plum",

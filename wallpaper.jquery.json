@@ -27,9 +27,9 @@
     "formstone",
     "benplum"
   ],
-  "docs": "http://formstone.it/wallpaper/",
-  "demo": "http://formstone.it/wallpaper/",
-  "download": "https://github.com/benplum/Wallpaper",
-  "bugs": "https://github.com/benplum/Wallpaper/issues",
-  "homepage": "http://formstone.it/wallpaper/"
+  "docs": "http://classic.formstone.it/wallpaper/",
+  "demo": "http://classic.formstone.it/wallpaper/",
+  "download": "https://github.com/FormstoneClassic/Wallpaper",
+  "bugs": "https://github.com/FormstoneClassic/Wallpaper/issues",
+  "homepage": "http://classic.formstone.it/wallpaper/"
 }

@@ -1,7 +1,7 @@
 /* 
- * Wallpaper v3.1.19 - 2015-02-06 
+ * Wallpaper v3.1.19 - 2015-04-04 
  * A jQuery plugin for smooth-scaling image and video backgrounds. Part of the Formstone Library. 
- * http://formstone.it/wallpaper/ 
+ * http://classic.formstone.it/wallpaper/ 
  * 
  * Copyright 2015 Ben Plum; MIT Licensed 
  */ 

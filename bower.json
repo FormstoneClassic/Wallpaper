@@ -8,7 +8,7 @@
     "url": "http://www.benplum.com"
   },
   "license": "MIT",
-  "homepage": "http://formstone.it/wallpaper/",
+  "homepage": "http://classic.formstone.it/wallpaper/",
   "main": [
     "jquery.fs.wallpaper.js",
     "jquery.fs.wallpaper.css"
